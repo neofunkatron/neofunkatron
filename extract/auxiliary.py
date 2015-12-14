@@ -5,34 +5,41 @@ Created on Wed Nov 12 12:11:43 2014
 
 Functions to extract graphs from Allen mouse connectivity.
 """
+from __future__ import print_function, division
+import numpy as np
+import os
+import pandas as pd
+import urllib
+import aux_random_graphs
 
-LINEAR_MODEL_DIRECTORY = '../../friday-harbor/linear_model'
+DATA_FILE_URL = 'http://www.nature.com/nature/journal/v508/n7495/extref/nature13186-s4.xlsx'
+DATA_FILE_NAME = 'nature13186-s4.xlsx'
 STRUCTURE_DIRECTORY = '../../mouse_connectivity_data'
 
-import numpy as np
-import scipy.io as sio
-import aux_random_graphs
-#from friday_harbor.structure import Ontology
 
-def load_W_and_P(data_dir=LINEAR_MODEL_DIRECTORY):
+def load_W_and_P():
     """Load weight and p-value matrices."""
 
-    # Load files
-    D_W_ipsi = sio.loadmat(data_dir + '/W_ipsi.mat')
-    D_W_contra = sio.loadmat(data_dir + '/W_contra.mat')
-    D_PValue_ipsi = sio.loadmat(data_dir + '/PValue_ipsi.mat')
-    D_PValue_contra = sio.loadmat(data_dir + '/PValue_contra.mat')
+    if not os.path.exists(DATA_FILE_NAME):
+        print('Downloading data to {}...'.format(DATA_FILE_NAME))
+        urllib.urlretrieve(DATA_FILE_URL, DATA_FILE_NAME)
+
+    w_ipsi_sheet = pd.read_excel(DATA_FILE_NAME, sheetname='W_ipsi')
+    w_ipsi = w_ipsi_sheet.as_matrix()
+    w_contra = pd.read_excel(DATA_FILE_NAME, sheetname='W_contra').as_matrix()
+    p_ipsi = pd.read_excel(DATA_FILE_NAME, sheetname='PValue_ipsi').as_matrix()
+    p_contra = pd.read_excel(DATA_FILE_NAME, sheetname='PValue_contra').as_matrix()
 
     # Make weight matrix for each side, then concatenate them
-    W_L = np.concatenate([D_W_ipsi['data'], D_W_contra['data']], 1)
-    W_R = np.concatenate([D_W_contra['data'], D_W_ipsi['data']], 1)
+    W_L = np.concatenate([w_ipsi, w_contra], 1)
+    W_R = np.concatenate([w_contra, w_ipsi], 1)
     W = np.concatenate([W_L, W_R], 0)
     # Make p_value matrix in the same manner
-    P_L = np.concatenate([D_PValue_ipsi['data'], D_PValue_contra['data']], 1)
-    P_R = np.concatenate([D_PValue_contra['data'], D_PValue_ipsi['data']], 1)
+    P_L = np.concatenate([p_ipsi, p_contra], 1)
+    P_R = np.concatenate([p_contra, p_ipsi], 1)
     P = np.concatenate([P_L, P_R], 0)
 
-    col_labels = D_W_ipsi['col_labels']
+    col_labels = list(w_ipsi_sheet.columns)
     # Add ipsi & contra to col_labels
     col_labels_L = [label.split(' ')[0] + '_L' for label in col_labels]
     col_labels_R = [label.split(' ')[0] + '_R' for label in col_labels]
