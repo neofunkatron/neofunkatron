@@ -152,4 +152,4 @@ for tick in top_log_ticks+right_log_ticks:
 for tick in right_log_ticks+right_lin_ticks:
     tick.set_rotation(270)
 
-plt.show(block=False)
+plt.show()

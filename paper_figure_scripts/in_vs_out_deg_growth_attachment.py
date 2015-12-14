@@ -124,4 +124,4 @@ for tick in right_tick_labels:
     tick.set_rotation(270)
 
     
-plt.show(block=False)
+plt.show()
