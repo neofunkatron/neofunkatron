@@ -1,1 +1,0 @@
-LENGTH_SCALE = 0.75
