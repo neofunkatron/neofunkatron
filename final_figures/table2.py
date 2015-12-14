@@ -17,8 +17,6 @@ import pickle
 
 import extract.brain_graph
 from random_graph import binary_undirected
-from random_graph.binary_undirected import \
-    undirected_biophysical_reverse_outdegree as pgpa_und
 from random_graph.binary_directed import biophysical_reverse_outdegree as pgpa_dir
 from metrics import binary_undirected as und_metrics
 import brain_constants as bc
@@ -46,8 +44,6 @@ repeats = 100
 # Set the graphs and metrics you wisht to include
 graph_names = ['Connectome', 'Random', 'Small-world', 'Scale-free',
                'PGPA']
-#graph_names = ['Connectome', 'Small-world']
-#metrics = [und_metrics.local_efficiency, und_metrics.global_efficiency]
 metrics = [nx.average_clustering, nx.average_shortest_path_length,
            und_metrics.global_efficiency, und_metrics.local_efficiency]
 brain_size = [7., 7., 7.]
@@ -55,7 +51,7 @@ brain_size = [7., 7., 7.]
 ###############################
 # Create graph/ compute metrics
 ###############################
-#TODO: consider using a dict instead of checking for each graph type
+# TODO: consider using a dict instead of checking for each graph type
 
 # Initialize matrix to store metric values
 met_arr = -1 * np.ones((len(graph_names), repeats, len(metrics)))
@@ -76,6 +72,7 @@ brain_metrics = calc_metrics(G_brain, metrics)
 for met_i, bm in enumerate(metrics):
     met_arr[graph_names.index('Connectome'), :, met_i] = bm(G_brain)
 
+print 'Running metric table with %d repeats\n' % repeats
 for rep in np.arange(repeats):
     # PGPA model
     if 'PGPA' in graph_names:
