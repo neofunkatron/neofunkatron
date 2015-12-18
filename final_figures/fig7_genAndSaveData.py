@@ -12,8 +12,7 @@ from extract import brain_graph
 from metrics import percolation as perc
 reload(perc)
 import brain_constants as bc
-from random_graph.binary_directed import biophysical_reverse_outdegree as \
-    pgpa_dir
+from random_graph.binary_directed import source_growth as sgpa
 from metrics import binary_undirected as und_metrics
 from random_graph import binary_undirected as und_graphs
 
@@ -67,9 +66,7 @@ def construct_graph_list_und(graphs_to_const):
 
     # Construct SGPA graph
     if graph_check[3] in graphs_to_const:
-        G_SGPA, _, _ = pgpa_dir(bc.num_brain_nodes,
-                                bc.num_brain_edges_directed,
-                                L=LENGTH_SCALE)
+        G_SGPA, _, _ = sgpa(bc.num_brain_nodes, bc.num_brain_edges_directed, L=LENGTH_SCALE)
         graph_list.append(G_SGPA.to_undirected())
 
     # Error check that we created correct number of graphs

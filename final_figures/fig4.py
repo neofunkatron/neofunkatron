@@ -2,8 +2,8 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 
-from random_graph.binary_directed import (biophysical_indegree,
-                                          biophysical_reverse_outdegree)
+from random_graph.binary_directed import (target_attraction,
+                                          source_growth)
 
 from network_plot.change_settings import set_all_text_fontsizes, set_all_colors
 
@@ -43,12 +43,13 @@ right_margin_ax = plt.subplot2grid(cf.subplot_divisions,
                                    sharey=left_main_ax)
 
 # create attachment and growth models
-Ggrowth, _, _ = biophysical_reverse_outdegree(N=bc.num_brain_nodes,
-                                              N_edges=bc.num_brain_edges_directed,
-                                              L=np.inf, gamma=1.)
-Gattachment, _, _ = biophysical_indegree(N=bc.num_brain_nodes,
-                                         N_edges=bc.num_brain_edges_directed,
-                                         L=np.inf, gamma=1.)
+Gattachment, _, _ = target_attraction(
+    N=bc.num_brain_nodes, N_edges=bc.num_brain_edges_directed, L=np.inf, gamma=1.
+)
+
+Ggrowth, _, _ = source_growth(
+    N=bc.num_brain_nodes, N_edges=bc.num_brain_edges_directed, L=np.inf, gamma=1.
+)
 
 # Get in- & out-degree
 indeg_attachment = np.array([Gattachment.in_degree()[node]

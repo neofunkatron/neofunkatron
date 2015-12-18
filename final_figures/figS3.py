@@ -9,7 +9,7 @@ import pandas as pd
 from numpy import concatenate as cc
 
 from extract.brain_graph import binary_directed as brain_graph
-from random_graph.binary_directed import biophysical_reverse_outdegree as biophysical_model
+from random_graph.binary_directed import source_growth as sgpa
 from network_plot.change_settings import set_all_text_fontsizes as set_fontsize
 
 import aux_random_graphs
@@ -24,11 +24,13 @@ labelsize=11
 ticksize=10
 legendsize=8
 
+
 def dist(x,y):
     return np.sqrt(np.sum((x-y)**2))
 
 if __name__ == "__main__":
-    G,_,model_centroids = biophysical_model()
+    # this isn't right... the third return object is a distance matrix
+    G, _, model_centroids = sgpa()
 
 
     centroidsUncorrected = aux_random_graphs.get_coords()
