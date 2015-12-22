@@ -24,7 +24,7 @@ class RandomGraphsTestCase(unittest.TestCase):
 
     def test_undirected_pure_geometric_graph_yields_right_adjacency_matrix(self):
 
-        G, A, D = random_graph_bu.pure_geometric(N=426, N_edges=2000, L=.75, brain_size=[7., 7., 7.])
+        G, A, D = random_graph_bu.pure_geometric(N=426, N_edges=7804, L=.75, brain_size=[7., 7., 7.])
         self.assertEqual(len(G.nodes()), 426)
 
         np.testing.assert_array_equal(nx.adjacency_matrix(G).todense().astype(int), A.astype(int))
