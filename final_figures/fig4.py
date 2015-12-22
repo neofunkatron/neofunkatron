@@ -2,9 +2,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 
-from random_graph.binary_directed import (target_attraction,
-                                          source_growth)
-
+from random_graph.binary_directed import target_attraction, source_growth
 from network_plot.change_settings import set_all_text_fontsizes, set_all_colors
 
 import brain_constants as bc
@@ -14,12 +12,41 @@ import in_out_plot_config as cf
 
 save = True
 if save:
-    save_path = os.environ['DBW_SAVE_CACHE']
+    save_dir = os.environ['NEOFUNKATRON_SAVE_CACHE']
 
 MARKERSIZE = 25.
 FONTSIZE = 12.
 ALPHA = 0.5
 
+L = 0.75
+
+
+# create attachment and growth models
+Gattachment, _, _ = target_attraction(
+    N=bc.num_brain_nodes, N_edges=bc.num_brain_edges_directed, L=L, gamma=1.
+)
+
+Ggrowth, _, _ = source_growth(
+    N=bc.num_brain_nodes, N_edges=bc.num_brain_edges_directed, L=L, gamma=1.
+)
+
+# Get in- & out-degree
+indeg_attachment = np.array([Gattachment.in_degree()[node]
+                             for node in Gattachment])
+outdeg_attachment = np.array([Gattachment.out_degree()[node]
+                              for node in Gattachment])
+deg_attachment = indeg_attachment + outdeg_attachment
+
+indeg_growth = np.array([Ggrowth.in_degree()[node] for node in Ggrowth])
+outdeg_growth = np.array([Ggrowth.out_degree()[node] for node in Ggrowth])
+deg_growth = indeg_growth + outdeg_growth
+
+# Calculate proportion in degree
+percent_indeg_attachment = indeg_attachment / deg_attachment.astype(float)
+percent_indeg_growth = indeg_growth / deg_growth.astype(float)
+
+
+# make plots
 fig = plt.figure(figsize=(7.5, 4), facecolor='w', dpi=300.)
 plt.subplots_adjust(hspace=0.45, wspace=0.45)
 
@@ -41,30 +68,6 @@ right_margin_ax = plt.subplot2grid(cf.subplot_divisions,
                                    rowspan=cf.right_margin_rowspan,
                                    colspan=cf.right_margin_colspan,
                                    sharey=left_main_ax)
-
-# create attachment and growth models
-Gattachment, _, _ = target_attraction(
-    N=bc.num_brain_nodes, N_edges=bc.num_brain_edges_directed, L=np.inf, gamma=1.
-)
-
-Ggrowth, _, _ = source_growth(
-    N=bc.num_brain_nodes, N_edges=bc.num_brain_edges_directed, L=np.inf, gamma=1.
-)
-
-# Get in- & out-degree
-indeg_attachment = np.array([Gattachment.in_degree()[node]
-                             for node in Gattachment])
-outdeg_attachment = np.array([Gattachment.out_degree()[node]
-                              for node in Gattachment])
-deg_attachment = indeg_attachment + outdeg_attachment
-
-indeg_growth = np.array([Ggrowth.in_degree()[node] for node in Ggrowth])
-outdeg_growth = np.array([Ggrowth.out_degree()[node] for node in Ggrowth])
-deg_growth = indeg_growth + outdeg_growth
-
-# Calculate proportion in degree
-percent_indeg_attachment = indeg_attachment / deg_attachment.astype(float)
-percent_indeg_growth = indeg_growth / deg_growth.astype(float)
 
 # Left main plot (in vs out degree)
 left_main_ax.scatter(indeg_growth, outdeg_growth, c=color_scheme.SRCGROWTH,
@@ -111,8 +114,8 @@ top_margin_ax.set_ylim([0, 0.1])
 right_margin_ax.set_xticks([0, 0.05, 0.1])
 right_margin_ax.set_xlim([0, 0.1025])
 
-top_margin_ax.set_ylabel('$P(K_\mathrm{in} = k)$', va='baseline')
-right_margin_ax.set_xlabel('$P(K_\mathrm{out} = k)$', va='top')
+top_margin_ax.set_ylabel('$P(k_\mathrm{in})$', va='baseline')
+right_margin_ax.set_xlabel('$P(k_\mathrm{out})$', va='top')
 
 # Right main plot (proportion in vs total degree)
 right_main_ax.scatter(deg_growth, percent_indeg_growth, s=MARKERSIZE, lw=0,
@@ -139,6 +142,7 @@ for temp_ax in [left_main_ax, right_main_ax, top_margin_ax, right_margin_ax]:
 
 fig.subplots_adjust(left=0.125, top=0.925, right=0.95, bottom=0.225)
 if save:
-    fig.savefig(os.path.join(save_path, 'figure_4.png'), dpi=150)
-    fig.savefig(os.path.join(save_path, 'figure_4.pdf'), dpi=300)
+    fig.savefig(os.path.join(save_dir, 'figure_4.png'), dpi=150)
+    fig.savefig(os.path.join(save_dir, 'figure_4.pdf'), dpi=300)
+
 plt.show(block=False)
