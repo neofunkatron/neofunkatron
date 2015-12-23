@@ -87,7 +87,7 @@ def target_attraction(N=bc.num_brain_nodes, N_edges=bc.num_brain_edges_directed,
     # Set diagonals to zero
     np.fill_diagonal(A, 0)
 
-    return G, A, D
+    return G, A.astype(int), D
 
 
 def source_growth(N=bc.num_brain_nodes, N_edges=bc.num_brain_edges_directed,
@@ -178,7 +178,7 @@ def source_growth(N=bc.num_brain_nodes, N_edges=bc.num_brain_edges_directed,
     # Set diagonals to zero
     np.fill_diagonal(A, 0)
 
-    return G, A, D
+    return G, A.astype(int), D
 
 
 def random_directed_deg_seq(in_sequence, out_sequence, simplify,
