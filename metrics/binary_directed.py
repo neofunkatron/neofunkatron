@@ -64,3 +64,19 @@ def power_law_fit_deg_cc(G):
     cc = cc[mask]
 
     return stats.linregress(np.log(deg), np.log(cc))
+
+
+def dists_by_reciprocity(a, d):
+    """
+    Given an adjacency and distance matrix, return arrays of distances corresponding to
+    reciprocal and nonreciprocal edges. Self-connections are ignored.
+    :param a: adjacency matrix
+    :param d: distance matrix
+    :return: array of distances of reciprocal edges, array of distances of nonreciprocal edges
+    """
+    r_mask = (a & a.T).astype(bool)
+    self_mask = ~np.eye(len(a), dtype=bool)
+    r_dists = d[r_mask & self_mask].flatten()
+    non_r_dists = d[a.astype(bool) & (~r_mask) & self_mask].flatten()
+
+    return r_dists, non_r_dists
