@@ -213,10 +213,7 @@ axs[2].set_ylabel('Probability')
 
 axs[2].hist(r_dists['sg_l_075'], bins=D_BINS, lw=0, color='r', normed=True, alpha=0.5)
 axs[2].hist(non_r_dists['sg_l_075'], bins=D_BINS, lw=0, color='k', normed=True, alpha=0.5)
-axs[2].plot(r_dists_bincs['sg_l_inf'], r_dists_cts['sg_l_inf'], color=cs.SRCGROWTH, lw=2, ls='-')
-axs[2].plot(non_r_dists_bincs['sg_l_inf'], non_r_dists_cts['sg_l_inf'], color=cs.SRCGROWTH, lw=2, ls='--')
-
-axs[2].legend(['SG (L=INF) Recip.', 'SG (L=INF) Non-Recip.', 'SG (L=0.75) Recip.', 'SG (L=0.75) Non-Recip.'])
+axs[2].legend(['SG (L=0.75) \nRecip.', 'SG (L=0.75) \nNon-Recip.'])
 
 axs[2].set_xticks([0, 4, 8, 12])
 axs[2].set_xlim(0, 12)
