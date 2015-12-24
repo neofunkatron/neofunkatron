@@ -178,7 +178,8 @@ axs[0].set_title('Connectome')
 axs[0].set_xlabel('Distance (mm)')
 axs[0].set_ylabel('Probability')
 
-axs[0].hist([r_dists_brain.flatten(), non_r_dists_brain.flatten()], bins=20, lw=0, color=['r', 'k'], normed=True)
+axs[0].hist(r_dists_brain.flatten(), bins=D_BINS, lw=0, facecolor='r', normed=True, alpha=0.5)
+axs[0].hist(non_r_dists_brain.flatten(), bins=D_BINS, lw=0, facecolor='k', normed=True, alpha=0.5)
 
 axs[0].legend(['Recip.', 'Non-Recip.'], fontsize=FONT_SIZE)
 
@@ -210,7 +211,8 @@ axs[2].set_title('Growth models')
 axs[2].set_xlabel('Distance (mm)')
 axs[2].set_ylabel('Probability')
 
-axs[2].hist([r_dists['sg_l_075'], non_r_dists['sg_l_075']], bins=D_BINS, lw=0, color=['r', 'k'], normed=True)
+axs[2].hist(r_dists['sg_l_075'], bins=D_BINS, lw=0, color='r', normed=True, alpha=0.5)
+axs[2].hist(non_r_dists['sg_l_075'], bins=D_BINS, lw=0, color='k', normed=True, alpha=0.5)
 axs[2].plot(r_dists_bincs['sg_l_inf'], r_dists_cts['sg_l_inf'], color=cs.SRCGROWTH, lw=2, ls='-')
 axs[2].plot(non_r_dists_bincs['sg_l_inf'], non_r_dists_cts['sg_l_inf'], color=cs.SRCGROWTH, lw=2, ls='--')
 
