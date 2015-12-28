@@ -37,8 +37,6 @@ def percolate_random(graph, prop_removed, func, func_kwargs=dict()):
 
     # Instantiate matrix to hold calculated graph size
     metrics = np.zeros((len(prop_removed)))
-    #n = graph.order()
-    #func_kwargs = {'orig_order': n}
 
     # Loop over each proportion
     for pi, prop in enumerate(prop_removed):
@@ -55,7 +53,7 @@ def percolate_random(graph, prop_removed, func, func_kwargs=dict()):
 
 
 def percolate_degree(graph, num_lesions, func, func_kwargs=dict()):
-    """ Get some metrics after removing some number of nodes based on degree.
+    """ Compute some metrics after removing some number of nodes based on degree.
 
     Parameters
     ----------
@@ -65,8 +63,6 @@ def percolate_degree(graph, num_lesions, func, func_kwargs=dict()):
         Number of lesions on network.
     func_list : list of function
         Metric functions to calculate and return.
-    repeats: int
-        Number of repetitions to average over for each proportion removed.
     kwargs_list: list of dict
         Additional arguements for functions
 
@@ -77,15 +73,49 @@ def percolate_degree(graph, num_lesions, func, func_kwargs=dict()):
     """
 
     # Instantiate matrix to hold calculated graph size
-    #S = np.zeros(len(num_lesions))
-    #asp = np.zeros(len(num_lesions))
-
     metrics = np.zeros(len(num_lesions))
 
     # Loop over each lesion
     for li, l in enumerate(num_lesions):
-        # Loop over each repeat
         temp_G, _ = aux.lesion_graph_degree(graph, l)
+
+        # Check that previous perc gave a meaningful result
+        if li > 0. and metrics[li - 1] == np.nan:
+            metrics[li:] = np.nan
+            return metrics
+        else:
+            metrics[li] = func(temp_G, **func_kwargs)
+
+    return metrics
+
+
+def percolate_degree_thresh(graph, lesion_thresh, func, func_kwargs=dict()):
+    """ Compute some metrics after removing nodes by successively thresholding
+    and removing nodes based on degree.
+
+    Parameters
+    ----------
+    graph : networkx graph
+        Graph to perform the percolation on
+    lesion_thresh: list
+        List of lesion thresholds
+    func_list : list of function
+        Metric functions to calculate and return.
+    kwargs_list: list of dict
+        Additional arguements for functions
+
+    Returns
+    -------
+    metrics : array
+        All metrics evaluated. Size (func x lesions x repeats)
+    """
+
+    # Instantiate matrix to hold calculated graph size
+    metrics = np.zeros(len(lesion_thresh))
+
+    # Loop over each lesion threshold
+    for li, l in enumerate(lesion_thresh):
+        temp_G, _ = aux.lesion_graph_degree_thresh(graph, l)
 
         # Check that previous perc gave a meaningful result
         if li > 0. and metrics[li - 1] == np.nan:
@@ -114,11 +144,11 @@ def lesion_met_largest_component(G, orig_order=None):
         Proportion of largest remaning component size if orig_order
         is defined. Otherwise, return number of nodes in largest component.
     """
-    components = sorted(nx.connected_components(G), key=len, reverse=True)
-    if len(components) > 0:
-        largest_component = len(components[0])
+    if G is None or G.order() <= 0:
+        return 0
     else:
-        largest_component = 0.
+        components = sorted(nx.connected_components(G), key=len, reverse=True)
+        largest_component = len(components[0])
 
     # Check if original component size is defined
     if orig_order is not None:
