@@ -10,7 +10,7 @@ import pickle
 from numpy import concatenate as cc
 
 from extract.brain_graph import binary_directed as brain_graph
-from random_graph.binary_directed import biophysical_reverse_outdegree as biophysical_model
+from random_graph.binary_directed import source_growth
 from network_plot.change_settings import set_all_text_fontsizes as set_fontsize
 
 import aux_random_graphs
@@ -28,37 +28,36 @@ labelsize = 10
 ticksize = 9
 legendsize = 8
 
-fig,axs = plt.subplots(1,3,facecolor='white',edgecolor='white',figsize=(7.5,2.3),dpi=300.)
-fig.subplots_adjust(bottom=0.15,wspace=0.42,hspace=0.35)
+fig,axs = plt.subplots(1, 3, facecolor='white', edgecolor='white', figsize=(7.5, 2.3), dpi=300.)
+fig.subplots_adjust(bottom=0.15, wspace=0.42, hspace=0.35)
 
 
-graphs = ['sgpa','sg','brain']
+graphs = ['sgpa', 'sg', 'brain']
 ### Compute/load distances ###
 if not os.path.isfile(pickle_file):    
     # init to empty lists
-    recip_distances = {};
+    recip_distances = {}
     nonrecip_distances = {}
+
     for graph in graphs:
         recip_distances[graph] = []
         nonrecip_distances[graph] = []
 
-
-
     for i in range(n_runs):
         print "iteration %i" % (i+1)
-        G_sgpa, A_sgpa, _ = biophysical_model(N=num_brain_nodes,
-                                            N_edges=num_brain_edges_directed,
-                                            L=.75, gamma=1., brain_size=[7.,7.,7.])
+        G_sgpa, A_sgpa, _ = source_growth(
+            N=num_brain_nodes, N_edges=num_brain_edges_directed, L=.75, gamma=1., brain_size=[7., 7., 7.]
+        )
 
-        G_sg, A_sg, _ = biophysical_model(N=num_brain_nodes,
-                                            N_edges=num_brain_edges_directed,
-                                            L=np.inf, gamma=1., brain_size=[7.,7.,7.])
+        G_sg, A_sg, _ = source_growth(
+            N=num_brain_nodes, N_edges=num_brain_edges_directed, L=np.inf, gamma=1., brain_size=[7., 7., 7.]
+        )
 
         # Only run brain the first time
         if i == 0:
             G_brain, A_brain, labels = brain_graph()
             centroids = G_brain.centroids
-            label_mapping = {k:labels[k] for k in range(len(labels))}
+            label_mapping = {k: labels[k] for k in range(len(labels))}
             G_brain = nx.relabel_nodes(G_brain,label_mapping)
             G_brain.centroids = centroids
             Gs = [G_sgpa,G_sg,G_brain]
@@ -81,7 +80,7 @@ if not os.path.isfile(pickle_file):
             recip_names = []
             nonrecip_names = []
             for edge in actual_edges:                
-                edges[edge] =  np.sqrt(np.sum((centroids[edge[0]] - centroids[edge[1]])**2))
+                edges[edge] = np.sqrt(np.sum((centroids[edge[0]] - centroids[edge[1]])**2))
                 if edges.has_key((edge[1],edge[0])):                    
                     recip_names.append(edge)
                 else:
@@ -94,10 +93,8 @@ if not os.path.isfile(pickle_file):
 
     pickle.dump([nonrecip_distances,recip_distances],open(pickle_file,'wb'))
 
-        
-
 else:    
-    with open(pickle_file,'r') as f:
+    with open(pickle_file, 'r') as f:
         distances = pickle.load(f)
         nonrecip_distances = distances[0]
         recip_distances = distances[1]
@@ -119,14 +116,14 @@ brain_reciprocity = reciprocity(A_brain)
 Ls = np.linspace(0,2,21)
 # Load the saved reciprocity values
 model_reciprocity = pd.read_csv(data_dir+'/reciprocity2.csv',index_col=0)
-mean_reciprocity = np.mean(model_reciprocity,axis=1)
-std_reciprocity = np.std(model_reciprocity,axis=1)
+mean_reciprocity = np.mean(model_reciprocity, axis=1)
+std_reciprocity = np.std(model_reciprocity, axis=1)
 
 
 ####################
 ### CONFIG MODEL ###
 ####################
-label_mapping = {k:labels_brain[k] for k in range(len(labels_brain))}
+label_mapping = {k: labels_brain[k] for k in range(len(labels_brain))}
 G_remap= nx.relabel_nodes(G_brain,label_mapping)
 n_repeats = 20
 config_reciprocity = np.zeros([n_repeats,1])
@@ -138,7 +135,7 @@ outdeg = G_remap.out_degree(); outdeg = [outdeg[node] for node in nodes]
 
 # Loop over 20 (to get a good mean value and SD estimate)
 for j in range(n_repeats):
-    G_config = nx.directed_configuration_model(indeg,outdeg)
+    G_config = nx.directed_configuration_model(indeg, outdeg)
     A_config = nx.adjacency_matrix(G_config).toarray()
     config_reciprocity[j] = reciprocity(A_config)
 

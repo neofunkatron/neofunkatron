@@ -11,8 +11,6 @@ import numpy as np
 import networkx as nx
 import graph_tools.auxiliary as aux_tools
 
-from binary_directed import biophysical_reverse_outdegree
-
 
 def ER_distance(N=426, p=.086, brain_size=[7., 7., 7.]):
     """Create an Erdos-Renyi random graph in which each node is assigned a
@@ -28,93 +26,70 @@ def ER_distance(N=426, p=.086, brain_size=[7., 7., 7.]):
     return G, A, D
 
 
-def biophysical(N=426, N_edges=7804, L=2.2, gamma=1.75,
-                brain_size=[7., 7., 7.]):
-    """Create a biophysically inspired graph. Connection probabilities depend
-    on distance & degree.
+def pure_geometric(N, N_edges, L, brain_size=[7., 7., 7.]):
+    """
+    Create a pure geometric model in which nodes are embedded in 3-D space and connect preferentially to
+    physically nearby nodes.
 
-    Args:
-        N: how many nodes
-        N_edges: how many edges
-        L: length constant
-        gamma: power to raise degree to
-        brain_size: size of space in which nodes are randomly placed
-    Returns:
-        Networkx graph object, adjacency matrix, distance matrix"""
-    # Pick node positions & calculate distance matrix
+    :param N: number of nodes
+    :param N_edges: number of edges
+    :param L: length constant
+    :param brain_size: volume in which to distribute nodes in
+    :return: graph, adjacency matrix, distance matrix
+    """
+    # randomly distribute nodes in space & compute distance matrix
     centroids = np.random.uniform([0, 0, 0], brain_size, (N, 3))
-
-    # Calculate distance matrix and distance decay matrix
     D = aux_tools.dist_mat(centroids)
-    D_decay = np.exp(-D / L)
 
-    # Initialize diagonal adjacency matrix
-    A = np.eye(N, dtype=float)
-
-    # Make graph object
+    # make an adjacency matrix and graph
+    A = np.zeros((N, N), dtype=float)
     G = nx.Graph()
-    G.add_nodes_from(np.arange(N))
+    G.add_nodes_from(range(N))
 
-    # Randomly add edges
+    # initialize some helper variables
+    node_idxs = np.arange(N, dtype=int)
+    degs = np.zeros((N, ), dtype=int)
+    fully_connected = np.zeros((N, ), dtype=bool)
+
+    # add edges
     edge_ctr = 0
     while edge_ctr < N_edges:
-        # Update degree list & degree-related probability vector
-        degs = A.sum(1).astype(float)
-        degs_prob = degs.copy()
 
-        # Pick random node to draw edge from
-        from_idx = np.random.randint(low=0, high=N)
+        # pick source randomly
+        src = np.random.choice(node_idxs[fully_connected == False])
 
-        # Skip this node if already fully connected
-        if degs[from_idx] == N:
-            continue
+        # get distance-dependent probabilities to all available targets
+        d_probs = np.exp(-D[src, :]/L)  # unnormalized
 
-        # Find unavailable cxns and set their probability to zero
-        unavail_mask = A[from_idx, :] > 0
-        degs_prob[unavail_mask] = 0
-        # Set self cxn probability to zero
-        degs_prob[from_idx] = 0
+        # compute which nodes are available to connect to
+        unavailable_targs = fully_connected.copy()  # no fully connected nodes
+        unavailable_targs[src] = True  # can't connect to self
+        unavailable_targs[A[src, :] == 1] = True  # can't connect to already connected nodes
 
-        # Calculate cxn probabilities from degree & distance
-        P = (degs_prob ** gamma) * D_decay[from_idx, :]
-        # On the off changes that P == 0, skip
-        if P.sum() == 0:
-            continue
-        # Otherwise keep going on
-        P /= float(P.sum())  # Normalize probabilities to sum to 1
+        # set probability to zero if node unavailable
+        d_probs[unavailable_targs] = 0.
+        # normalize
+        d_probs /= d_probs.sum()
 
-        # Sample node from distribution
-        to_idx = np.random.choice(np.arange(N), p=P)
+        # randomly pick a target
+        targ = np.random.choice(node_idxs, p=d_probs)
 
-        # Add edge to graph
-        if A[from_idx, to_idx] == 0:
-            G.add_edge(from_idx, to_idx, {'d': D[from_idx, to_idx]})
+        # add edge to graph and adjacency matrix
+        G.add_edge(src, targ)
+        A[src, targ] = 1
+        A[targ, src] = 1
 
-        # Add edge to adjacency matrix
-        A[from_idx, to_idx] += 1
-        A[to_idx, from_idx] += 1
+        # update degrees
+        degs[src] += 1
+        degs[targ] += 1
 
-        # Increment edge counter
+        # update available_from
+        if degs[src] == N:
+            fully_connected[src] = False
+        if degs[targ] == N:
+            fully_connected[targ] = False
+
         edge_ctr += 1
-
-    # Set diagonals to zero
-    np.fill_diagonal(A, 0)
-
-    return G, A, D
-
-
-def undirected_biophysical_reverse_outdegree(N=426, N_directed_edges=8820,
-                                             L=np.inf, gamma=1.75,
-                                             brain_size=[7., 7., 7.]):
-    """Identical to the biophysical reverse outdegree model, except that
-    adjacency matrix is symmetrized so that reciprocal edges merge into one."""
-
-    # create
-    G, A, D = biophysical_reverse_outdegree(N=N, N_edges=N_directed_edges, L=L,
-                                            gamma=gamma, brain_size=brain_size)
-
-    # symmetrize graph
-    G = G.to_undirected()
 
     return G, A, D
 

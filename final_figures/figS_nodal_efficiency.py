@@ -12,8 +12,8 @@ import networkx as nx
 import matplotlib.pyplot as plt
 
 from extract import brain_graph
-from random_graph.binary_directed import biophysical_reverse_outdegree as sgpa
-from random_graph.binary_directed import biophysical_indegree as ta
+from random_graph.binary_directed import source_growth as sgpa
+from random_graph.binary_directed import target_attraction as ta
 from random_graph.binary_directed import random_directed_deg_seq
 from metrics import binary_directed as metrics_bd
 from network_plot import change_settings

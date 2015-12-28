@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import os
 
-from random_graph.binary_directed import growing_SGPA_1
+from random_graph.binary_directed import growing_sgpa
 from network_plot.change_settings import set_all_text_fontsizes, set_all_colors
 from metrics import binary_directed as metrics_bd
 from network_plot import change_settings

@@ -6,7 +6,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 
-from random_graph.binary_directed import biophysical_reverse_outdegree
+from random_graph.binary_directed import source_growth
 
 from network_plot.change_settings import set_all_text_fontsizes, set_all_colors
 import brain_constants as bc
@@ -21,10 +21,10 @@ save = True
 if save:
     save_path = os.environ['DBW_SAVE_CACHE']
 
-# create attachment and growth models
-G = biophysical_reverse_outdegree(N=bc.num_brain_nodes,
-                                  N_edges=bc.num_brain_edges_directed, L=0.75,
-                                  gamma=1.)[0]
+# create growth model
+G = source_growth(
+    N=bc.num_brain_nodes, N_edges=bc.num_brain_edges_directed, L=0.75, gamma=1.
+)[0]
 
 # Get in- & out-degree
 indeg = np.array([G.in_degree()[node] for node in G])
