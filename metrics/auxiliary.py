@@ -90,10 +90,45 @@ def lesion_graph_degree(graph, num_lesions):
         node_i, node_d = max(G.degree().items(),
                              key=lambda degree: degree[1])
         G.remove_node(node_i)
-        #print (node_i, node_d)
 
     if G.order() > 0:
         return G, nx.adjacency_matrix(G)
     else:
-        print 'Graph completely lesioned.'
+        #print 'Graph completely lesioned.'
+        return None, None
+
+
+def lesion_graph_degree_thresh(graph, threshold):
+    """
+    Remove vertices from a graph with degree greater than or equal to
+    threshold.
+
+    Parameters:
+    -----------
+        graph: NetworkX graph to be lesioned.
+        threshold: Degree above which to remove nodes.
+
+    Returns:
+    --------
+        G: NetworkX graph
+        A: Adjacency matrix for graph
+
+    """
+    # Error checking
+    G = deepcopy(graph)
+
+    assert threshold >= 0, " In percolation, `threshold` must be >= 0."
+    # Check if lesioning is necessary for threshold
+    if threshold > max(G.degree().values()):
+        return G, nx.adjacency_matrix(G)
+
+    # Identify all node indices >= threshold
+    node_inds = np.where(np.asarray(G.degree().values()) >= threshold)[0]
+    # Eliminate these nodes
+    G.remove_nodes_from(node_inds)
+
+    if G.order() > 0:
+        return G, nx.adjacency_matrix(G)
+    else:
+        #print 'Graph completely lesioned.'
         return None, None
