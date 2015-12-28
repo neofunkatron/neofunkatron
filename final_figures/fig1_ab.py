@@ -7,6 +7,7 @@ degree_dists_undirected.py
 Plot undirected degree distributions for brain and standard graphs
 """
 
+import os
 import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
@@ -15,10 +16,10 @@ import config
 
 from network_plot.change_settings import set_all_text_fontsizes
 
-#from networkx import erdos_renyi_graph as er
 from networkx import barabasi_albert_graph as ba
 from networkx import watts_strogatz_graph as ws
 
+load_dir = os.environ['DBW_SAVE_CACHE']
 ###############################################
 # Plotting params
 ###############################################
@@ -37,7 +38,7 @@ plt.rcParams['ps.fonttype'] = 42
 plt.rcParams['pdf.fonttype'] = 42
 
 n_bins = 50
-repeats = 1
+repeats = 100  # 100 repeats for manuscript
 
 hist_brain = True  # Plot brain as histogram bars? Otherwise, as line
 ###############################################
@@ -95,7 +96,7 @@ BA_deg_mat = -1 * np.ones((repeats, n_nodes))
 
 for r in np.arange(repeats):
     # Erdos-Renyi (pure random)
-    #ER_deg_mat[r, :] = er(n_nodes, edge_density).degree().values()
+    # ER_deg_mat[r, :] = er(n_nodes, edge_density).degree().values()
 
     # Degree controlled random
     RAND_deg_mat[r, :] = nx.random_degree_sequence_graph(
@@ -118,7 +119,7 @@ graph_ls = ['-', '-', '-']
 
 brain_label = 'Connectome'
 brain_lw = 0.5
-brain_alpha = 0.7
+brain_alpha = 0.85
 
 ###################################################
 # Make all plots
@@ -170,4 +171,6 @@ axs[2].legend_.remove()
 
 fig.set_tight_layout(True)
 fig.subplots_adjust(top=0.925, bottom=0.17, left=0.12, wspace=0.325)
+
+fig.savefig(os.path.join(load_dir, 'fig1_ab.png'), dpi=300)
 plt.draw()
