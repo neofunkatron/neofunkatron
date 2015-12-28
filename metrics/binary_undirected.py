@@ -164,10 +164,14 @@ def global_efficiency(G):
     float : avg global efficiency of the graph
     """
 
+    if G is None:
+        return 0.
     if G.is_directed() is True:
         warnings.warn("Graph shouldn't be directed", Warning)
 
     n_nodes = G.number_of_nodes()
+    if n_nodes < 2:
+        return 0
     den = np.float(n_nodes * (n_nodes - 1))
 
     return sum(efficiency(G, n1, n2) for n1, n2 in permutations(G, 2)) / den
@@ -186,7 +190,17 @@ def local_efficiency(G):
     float : avg local efficiency of the graph
     """
 
+    if G is None:
+        return 0
     if G.is_directed() is True:
         warnings.warn("Graph shouldn't be directed", Warning)
 
     return sum([global_efficiency(G.subgraph(G[v])) for v in G]) / G.order()
+
+
+def edge_count(G):
+    """Helper for number of edges"""
+    if G is None:
+        return 0
+    else:
+        return G.number_of_edges()
