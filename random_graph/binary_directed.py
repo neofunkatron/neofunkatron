@@ -47,39 +47,43 @@ def target_attraction(N=bc.num_brain_nodes, N_edges=bc.num_brain_edges_directed,
     while edge_ctr < N_edges:
         # Update degree list & degree-related probability vector
         indegs = A.sum(0).astype(float)
-        outdegs = A.sum(1).astype(float)
         indegs_prob = indegs.copy()
 
-        # Pick random node to draw edge from
-        from_idx = np.random.randint(low=0, high=N)
-
-        # Skip this node if already fully connected
-        if outdegs[from_idx] == N:
-            continue
-
-        # Find unavailable cxns and set their probability to zero
-        unavail_mask = A[from_idx, :] > 0
-        indegs_prob[unavail_mask] = 0
-        # Set self cxn probability to zero
-        indegs_prob[from_idx] = 0
-
-        # Calculate cxn probabilities from in-degree & distance
-        P = (indegs_prob ** gamma) * D_decay[from_idx, :]
-        # On the off changes that P == 0, skip
+        # Calculate target node probability
+        P = indegs_prob ** gamma
+        # On the off chance that P == 0, skip
         if P.sum() == 0:
             continue
         # Otherwise keep going on
         P /= float(P.sum())  # Normalize probabilities to sum to 1
 
         # Sample node from distribution
-        to_idx = np.random.choice(np.arange(N), p=P)
+        targ_idx = np.random.choice(np.arange(N), p=P)
+
+        D_targ = D_decay[:, targ_idx]
+
+        # Find unavailable cxns and set their probability to zero
+        unavail_mask = A[:, targ_idx] > 0
+        D_targ[unavail_mask] = 0
+
+        # Set self-connection probability to 0
+        D_targ[targ_idx] = 0
+
+        D_targ /= float(D_targ.sum())
+
+        # Pick random source to draw edge from
+        src_idx = np.random.choice(np.arange(N), p=D_targ)
+
+        # Skip this node if already fully connected
+        if indegs[targ_idx] == N:
+            continue
 
         # Add edge to graph
-        if A[from_idx, to_idx] == 0:
-            G.add_edge(from_idx, to_idx, {'d': D[from_idx, to_idx]})
+        if A[src_idx, targ_idx] == 0:
+            G.add_edge(src_idx, targ_idx, {'d': D[src_idx, targ_idx]})
 
         # Add edge to adjacency matrix
-        A[from_idx, to_idx] += 1
+        A[src_idx, targ_idx] += 1
 
         # Increment edge counter
         edge_ctr += 1
