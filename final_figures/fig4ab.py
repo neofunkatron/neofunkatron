@@ -10,9 +10,6 @@ import brain_constants as bc
 import color_scheme
 import in_out_plot_config as cf
 
-save = True
-if save:
-    save_dir = os.environ['NEOFUNKATRON_SAVE_CACHE']
 
 MARKERSIZE = 25.
 FONTSIZE = 12.
@@ -141,8 +138,8 @@ for temp_ax in [left_main_ax, right_main_ax, top_margin_ax, right_margin_ax]:
     temp_ax.tick_params(width=1.)
 
 fig.subplots_adjust(left=0.125, top=0.925, right=0.95, bottom=0.225)
-if save:
-    fig.savefig('fig4ab.png', dpi=150)
-    fig.savefig('fig4ab.pdf', dpi=300)
+
+fig.savefig('fig4ab.png', dpi=150)
+fig.savefig('fig4ab.pdf', dpi=300)
 
 plt.show(block=False)
