@@ -187,40 +187,40 @@ axs[0].set_xticks([0, 4, 8, 12])
 axs[0].set_xlim(0, 12)
 axs[0].set_ylim(0, .7)
 
-# reciprocity vs L for SG, TA, and random (random has no dependence on L)
-axs[1].set_title('Varying L')
-axs[1].set_xlabel('L (mm)')
-axs[1].set_ylabel('Reciprocity coefficient')
+axs[1].set_title('Growth models')
+axs[1].set_xlabel('Distance (mm)')
 
-axs[1].plot(rs['LS'][1:], sg_mean, color=cs.SRCGROWTH, lw=2)
-axs[1].plot(rs['LS'][1:], ta_mean, color=cs.TARGETATTRACTION, lw=2)
-axs[1].plot(rs['LS'][1:], rand_mean, color=cs.RANDOM, lw=2)
-axs[1].axhline(brain_recip, color=cs.ATLAS, ls='--', lw=2)
+axs[1].hist(r_dists['sg_l_075'], bins=D_BINS, lw=0, color='r', normed=True, alpha=0.5)
+axs[1].hist(non_r_dists['sg_l_075'], bins=D_BINS, lw=0, color='k', normed=True, alpha=0.5)
+axs[1].legend(['SG (L=0.75) \nRecip.', 'SG (L=0.75) \nNon-Recip.'])
 
-axs[1].legend(['SG', 'TA', 'Random', 'Connectome'], fontsize=FONT_SIZE)
-
-axs[1].fill_between(rs['LS'][1:], sg_mean - sg_std, sg_mean + sg_std, color=cs.SRCGROWTH, alpha=ALPHA)
-axs[1].fill_between(rs['LS'][1:], ta_mean - ta_std, ta_mean + ta_std, color=cs.TARGETATTRACTION, alpha=ALPHA)
-axs[1].fill_between(rs['LS'][1:], rand_mean - rand_std, rand_mean + rand_std, color=cs.RANDOM, alpha=ALPHA)
-
-axs[1].set_xlim(0, 2)
+axs[1].set_xticks([0, 4, 8, 12])
+axs[1].set_yticklabels([])
+axs[1].set_xlim(0, 12)
 axs[1].set_ylim(0, .7)
 
-axs[2].set_title('Growth models')
-axs[2].set_xlabel('Distance (mm)')
-axs[2].set_ylabel('Probability')
+# reciprocity vs L for SG, TA, and random (random has no dependence on L)
+axs[2].set_title('Varying L')
+axs[2].set_xlabel('L (mm)')
+axs[2].set_ylabel('Reciprocity coefficient')
 
-axs[2].hist(r_dists['sg_l_075'], bins=D_BINS, lw=0, color='r', normed=True, alpha=0.5)
-axs[2].hist(non_r_dists['sg_l_075'], bins=D_BINS, lw=0, color='k', normed=True, alpha=0.5)
-axs[2].legend(['SG (L=0.75) \nRecip.', 'SG (L=0.75) \nNon-Recip.'])
+axs[2].plot(rs['LS'][1:], sg_mean, color=cs.SRCGROWTH, lw=2)
+axs[2].plot(rs['LS'][1:], ta_mean, color=cs.TARGETATTRACTION, lw=2)
+axs[2].plot(rs['LS'][1:], rand_mean, color=cs.RANDOM, lw=2)
+axs[2].axhline(brain_recip, color=cs.ATLAS, ls='--', lw=2)
 
-axs[2].set_xticks([0, 4, 8, 12])
-axs[2].set_xlim(0, 12)
+axs[2].legend(['SG', 'TA', 'Random', 'Connectome'], fontsize=FONT_SIZE)
+
+axs[2].fill_between(rs['LS'][1:], sg_mean - sg_std, sg_mean + sg_std, color=cs.SRCGROWTH, alpha=ALPHA)
+axs[2].fill_between(rs['LS'][1:], ta_mean - ta_std, ta_mean + ta_std, color=cs.TARGETATTRACTION, alpha=ALPHA)
+axs[2].fill_between(rs['LS'][1:], rand_mean - rand_std, rand_mean + rand_std, color=cs.RANDOM, alpha=ALPHA)
+
+axs[2].set_xlim(0, 2)
 axs[2].set_ylim(0, .7)
 
 axs[0].text(.2, .64, 'c', fontweight='bold', fontsize=FONT_SIZE)
-axs[1].text(.03, .64, 'd', fontweight='bold', fontsize=FONT_SIZE)
-axs[2].text(.2, .64, 'e', fontweight='bold', fontsize=FONT_SIZE)
+axs[1].text(.2, .64, 'd', fontweight='bold', fontsize=FONT_SIZE)
+axs[2].text(.03, .64, 'e', fontweight='bold', fontsize=FONT_SIZE)
 
 for ax in axs:
     set_fontsize(ax, FONT_SIZE)
