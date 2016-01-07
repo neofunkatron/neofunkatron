@@ -19,8 +19,8 @@ LS = np.linspace(0, 2, 21)
 BRAIN_SIZE = [7., 7., 7.]
 N_REPEATS = 100
 ALPHA = .3
-FONT_SIZE = 16
-D_BINS = 30
+FONT_SIZE = 20
+D_BINS = np.linspace(0, 12, 30)
 
 if not os.path.isfile(TEMP_FILE_NAME):
     # load brain graph
@@ -184,14 +184,13 @@ axs[0].hist(non_r_dists_brain.flatten(), bins=D_BINS, lw=0, facecolor='k', norme
 axs[0].legend(['Recip.', 'Non-Recip.'], fontsize=FONT_SIZE)
 
 axs[0].set_xticks([0, 4, 8, 12])
-axs[0].set_yticks([0, .1, .2, .3, .4])
 axs[0].set_xlim(0, 12)
-axs[0].set_ylim(0, .4)
+axs[0].set_ylim(0, .7)
 
 # reciprocity vs L for SG, TA, and random (random has no dependence on L)
 axs[1].set_title('Varying L')
 axs[1].set_xlabel('L (mm)')
-axs[1].set_ylabel('Reciprocity')
+axs[1].set_ylabel('Reciprocity coefficient')
 
 axs[1].plot(rs['LS'][1:], sg_mean, color=cs.SRCGROWTH, lw=2)
 axs[1].plot(rs['LS'][1:], ta_mean, color=cs.TARGETATTRACTION, lw=2)
@@ -219,7 +218,7 @@ axs[2].set_xticks([0, 4, 8, 12])
 axs[2].set_xlim(0, 12)
 axs[2].set_ylim(0, .7)
 
-axs[0].text(.2, .37, 'c', fontweight='bold', fontsize=FONT_SIZE)
+axs[0].text(.2, .64, 'c', fontweight='bold', fontsize=FONT_SIZE)
 axs[1].text(.03, .64, 'd', fontweight='bold', fontsize=FONT_SIZE)
 axs[2].text(.2, .64, 'e', fontweight='bold', fontsize=FONT_SIZE)
 
