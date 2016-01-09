@@ -146,8 +146,9 @@ if gen_directed:
 # Undirected
 else:
     func_list = [(perc.lesion_met_largest_component, 'Largest component'),
-                 #(und_metrics.global_efficiency, 'Global efficiency'),
-                 (und_metrics.edge_count, 'Edge count')]
+                 (und_metrics.global_efficiency, 'Global efficiency'),
+                 (und_metrics.edge_count, 'Edge count'),
+                 (und_metrics.density, 'Connection density')]
 
 
 #################

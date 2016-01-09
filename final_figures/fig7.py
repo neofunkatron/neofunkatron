@@ -42,6 +42,8 @@ for g_name in graph_names_und:
         g_dict['data_rand_std'] = np.std(g_dict['data_rand'], axis=-1)
         g_dict['data_targ_avg'] = np.mean(g_dict['data_targ'], axis=-1)
         g_dict['data_targ_std'] = np.std(g_dict['data_targ'], axis=-1)
+        g_dict['data_targ_thresh_avg'] = np.mean(g_dict['data_targ_thresh'], axis=-1)
+        g_dict['data_targ_thresh_std'] = np.std(g_dict['data_targ_thresh'], axis=-1)
 
 if directed:
     # Load directed graph metrics
@@ -73,10 +75,10 @@ plt.ion()
 
 col_d = cf.COLORS
 graph_col = [col_d['brain'], col_d['configuration'], col_d['small-world'],
-             col_d['scale-free'], col_d['sgpa']]
+             col_d['scale-free'], col_d['pgpa']]
 LW = 2.5
 FONTSIZE = 13
-FIGSIZE = (7.5, 3.75)
+FIGSIZE = (7.5, 6)
 
 FACECOLOR = cf.FACE_COLOR
 #LABELCOLOR = cf.LABELCOLOR
@@ -85,9 +87,10 @@ FACECOLOR = cf.FACE_COLOR
 ##########################################################
 # Random attack (undirected) with subplot for each metric
 ##########################################################
+'''
 if undirected:
     # construct figure
-    fig1, ax_list1 = plt.subplots(nrows=1, ncols=len(graph_metrics_und[0]['metrics_list']),
+    fig1, ax_list1 = plt.subplots(nrows=1, ncols=2,
                                   facecolor=FACECOLOR, figsize=FIGSIZE)
 
     # Loop over each metric and then each graph
@@ -121,7 +124,7 @@ if undirected:
     ############################################################
     # Targeted attack (undirected) with subplot for each metric
     ############################################################
-    fig2, ax_list2 = plt.subplots(nrows=1, ncols=len(graph_metrics_und[0]['metrics_list']),
+    fig2, ax_list2 = plt.subplots(nrows=1, ncols=2,
                                   facecolor=FACECOLOR, figsize=FIGSIZE)
 
     for fi, func_label in enumerate(graph_metrics_und[0]['metrics_label']):
@@ -207,19 +210,17 @@ if directed:
         for text in ax.get_xticklabels() + ax.get_yticklabels():
             text.set_fontsize(FONTSIZE)
     fig4.set_tight_layout(True)
-
+'''
 #####################
 # Combined plot hack
 #####################
-# Targeted attack (undirected, largest component and efficiency)
-# and random (undirected efficiency)
+# Targeted attack (one by one) and targeted attack (using threshold)
+# Metrics: largest (giant) component and undirected efficiency
 
-fig5, ax_list5 = plt.subplots(nrows=1, ncols=2, figsize=FIGSIZE,
-                              facecolor=FACECOLOR)
+fig5, ax_list5 = plt.subplots(nrows=2, ncols=2, figsize=FIGSIZE,
+                              facecolor=FACECOLOR, sharex='col', sharey='row')
 
-metrics = graph_metrics_und[0]['metrics_label'][1] * 2 + \
-    graph_metrics_und[0]['metrics_label'][0]
-labels = ['a', 'b', 'c']
+labels = ['a', 'b', 'c', 'd']
 
 '''
 # Random attack, undirected efficiency
@@ -246,44 +247,100 @@ ax_list5[0].set_ylabel(graph_metrics_und[0]['metrics_label'][1],
 
 # TODO: Hack; Fix below after rerunning percolation_genAndSave
 #metric_labels = np.roll(graph_metrics_und[0]['metrics_label'], shift=1, axis=0)
-metric_labels = ['Global efficiency', 'Largest component']
-for fi, func_label in enumerate(metric_labels):
-    for gi, g_dict in enumerate(graph_metrics_und):
-        # Deal with legacy naming issue first
-        if g_dict['graph_name'] == 'PGPA':
-            g_dict['graph_name'] = 'SGPA'
+metric_labels = ['Largest (giant) component', 'Global efficiency']
+lesion_types = ['targ', 'targ_thresh']
+x_axis_labels = ['Nodes removed', 'Threshold for removal']
 
-        targ_avg = np.roll(g_dict['data_targ_avg'], shift=1, axis=0)
-        targ_std = np.roll(g_dict['data_targ_std'], shift=1, axis=0)
+for gi, g_dict in enumerate(graph_metrics_und):
+    for mi, metric in enumerate(metric_labels):
+        for li, lesion_type in enumerate(lesion_types):
 
-        x = g_dict['removed_targ']
-        avg = targ_avg[fi, :]
-        fill_upper = avg + targ_std[fi, :]
-        fill_lower = avg - targ_std[fi, :]
+            avg = np.squeeze(g_dict['data_' + lesion_type + '_avg'][mi, :])
+            std = np.squeeze(g_dict['data_' + lesion_type + '_std'][mi, :])
 
-        ax_list5[fi].plot(x, avg, lw=LW, label=g_dict['graph_name'],
-                          color=graph_col[gi])
-        ax_list5[fi].fill_between(x, fill_upper, fill_lower, lw=0,
-                                  facecolor=graph_col[gi],
-                                  interpolate=True, alpha=.4)
-    #ax_list5[fi].set_title('Targeted Attack', fontsize=FONTSIZE)
-    ax_list5[fi].set_xlabel('Nodes removed', fontsize=FONTSIZE)
-    ax_list5[fi].set_ylabel(func_label, fontsize=FONTSIZE, va='baseline')
+            '''
+            targ_avg = np.roll(g_dict['data_targ_avg'], shift=1, axis=0)
+            targ_std = np.roll(g_dict['data_targ_std'], shift=1, axis=0)
+            '''
 
-ax_list5[1].legend(loc='best', prop={'size': FONTSIZE - 3})
+            x = g_dict['removed_' + lesion_type]
+            fill_upper = avg + std
+            fill_lower = avg - std
 
-for ax_i, ax in enumerate(ax_list5):
+            ax_list5[mi, li].plot(x, avg, lw=LW, label=g_dict['graph_name'],
+                                  color=graph_col[gi])
+            ax_list5[mi, li].fill_between(x, fill_upper, fill_lower, lw=0,
+                                          facecolor=graph_col[gi],
+                                          interpolate=True, alpha=.4)
+
+ax_list5[1, 0].set_xlabel(x_axis_labels[0], fontsize=FONTSIZE)
+ax_list5[1, 1].set_xlabel(x_axis_labels[1], fontsize=FONTSIZE)
+
+ax_list5[0, 0].set_ylim([0, 500])
+ax_list5[0, 1].set_ylim([0, 500])
+ax_list5[1, 0].set_ylim([0, 0.6])
+ax_list5[1, 1].set_ylim([0, 0.6])
+
+ax_list5[0, 0].set_ylabel(metric_labels[0], fontsize=FONTSIZE, va='baseline')
+ax_list5[1, 0].set_ylabel(metric_labels[1], fontsize=FONTSIZE, va='baseline')
+ax_list5[0, 0].legend(loc='best', prop={'size': FONTSIZE - 3})
+
+for (ax_x, ax_y), ax in np.ndenumerate(ax_list5):
     ax.locator_params(axis='both', nbins=5)
     for text in ax.get_xticklabels() + ax.get_yticklabels():
         text.set_fontsize(FONTSIZE)
-    ax.text(0.08, .92, labels[ax_i], color='k', fontsize=FONTSIZE + 1,
+    ax.text(0.08, .92, labels[ax_x*2 + ax_y], color='k', fontsize=FONTSIZE + 1,
             fontweight='bold', transform=ax.transAxes)
-ax_list5[0].set_xlim([0, 426])
-ax_list5[1].set_xlim([0, 426])
-ax_list5[1].set_ylim([0, 450])
-ax_list5[0].set_ylim([0, .3])  # Manually set to prevent lower axis < 0
+
+ax_list5[0, 0].set_xlim([0, 426])
+ax_list5[1, 0].set_xlim([0, 426])
+ax_list5[0, 1].set_xlim([100, 0])
+ax_list5[1, 1].set_xlim([100, 0])
+
 fig5.set_tight_layout(True)
-plt.draw()
 
 fig5.savefig(op.join(load_dir, 'percolation_plot.png'), dpi=300)
-#fig5.savefig('/home/wronk/Builds/lesion_fig_poster.png', transparent=True)
+
+#########################
+# Plot connection density
+#########################
+# Targeted attack (one by one) and targeted attack (using threshold)
+# Metrics: largest (giant) component and undirected efficiency
+
+edge_di = 2  # Edge density index
+#edge_di1 = g_dict['metrics_list'].index('Connection density')
+#assert edge_di1 == edge_di
+
+fig6, ax6 = plt.subplots(figsize=(3.5, 3.5), facecolor=FACECOLOR)
+
+for gi, g_dict in enumerate(graph_metrics_und):
+    #for li, lesion_type in enumerate(lesion_types):
+
+    avg = np.squeeze(g_dict['data_' + lesion_types[0] + '_avg'][edge_di, :])
+    std = np.squeeze(g_dict['data_' + lesion_types[0] + '_std'][edge_di, :])
+
+    x = g_dict['removed_' + lesion_types[0]]
+    fill_upper = avg + std
+    fill_lower = avg - std
+
+    ax6.plot(x, avg, lw=LW, label=g_dict['graph_name'], color=graph_col[gi])
+    ax6.fill_between(x, fill_upper, fill_lower, lw=0, facecolor=graph_col[gi],
+                     interpolate=True, alpha=.4)
+
+
+ax6.set_xlabel(x_axis_labels[0])
+ax6.set_ylabel('Connection density')
+ax6.set_xlim([0, 426])
+ax6.set_ylim([0, 8000])
+ax6.locator_params(axis='both', n_bins=2)
+
+#ax6.set_aspect('equal')
+'''
+ax_list6[1].set_xlabel(x_axis_labels[1])
+ax_list6[1].set_xlim([150, 0])
+ax_list6[1].set_ylim([0, 8000])
+'''
+
+fig6.set_tight_layout(True)
+
+plt.show()
