@@ -204,3 +204,11 @@ def edge_count(G):
         return 0
     else:
         return G.number_of_edges()
+
+
+def density(G):
+    """Helper for connection density"""
+    if G is None:
+        return 0
+    else:
+        return nx.density(G)
