@@ -10,32 +10,32 @@ import pickle
 
 from extract import brain_graph
 from metrics import percolation as perc
-reload(perc)
+from metrics import binary_undirected as und_metrics
 import brain_constants as bc
 from random_graph.binary_directed import source_growth as sgpa
-from metrics import binary_undirected as und_metrics
 from random_graph import binary_undirected as und_graphs
 
 from config.graph_parameters import LENGTH_SCALE
 
-repeats = 100  # Number of times to repeat percolation
+repeats = 1  # Number of times to repeat percolation
 prop_rm = np.arange(0., 1.00, 0.05)
 lesion_list = np.arange(0, 426, 10)
+thresh_list = np.arange(150, -1, -5)
 node_order = 426
 brain_size = [7., 7., 7.]
 
 save_dir = os.environ['DBW_SAVE_CACHE']
-#data_dir = os.environ['DBW_DATA_DIRECTORY']
-save_files = True
+save_files = False
 gen_directed = False
 ##############################################################################
 
 
 def construct_graph_list_und(graphs_to_const):
     """Construct and return a list of graphs so graph construction is easily
-    repeatable"""
+    repeatable.
 
-    graph_check = ['Random', 'Small-world', 'Scale-free', 'SGPA']
+    Can handle: Random, Small-world, Scale-free, SGPA, SGPA-random"""
+
     graph_list = []
 
     # Always construct and add Allen Institute mouse brain to list
@@ -49,29 +49,37 @@ def construct_graph_list_und(graphs_to_const):
     brain_degree_mean = np.mean(brain_degree)
 
     # Construct degree controlled random
-    if graph_check[0] in graphs_to_const:
+    if 'Random' in graphs_to_const:
         G_RAND, _, _ = und_graphs.random_simple_deg_seq(
             sequence=brain_degree, brain_size=brain_size, tries=100)
         graph_list.append(G_RAND)
 
     # Construct small-world graph
-    if graph_check[1] in graphs_to_const:
+    if 'Small-world' in graphs_to_const:
         graph_list.append(nx.watts_strogatz_graph(
-            n_nodes, int(round(brain_degree_mean)), 0.159))
+            n_nodes, int(round(brain_degree_mean)), 0.23))
 
     # Construct scale-free graph
-    if graph_check[2] in graphs_to_const:
+    if 'Scale-free' in graphs_to_const:
         graph_list.append(nx.barabasi_albert_graph(
             n_nodes, int(round(brain_degree_mean / 2.))))
 
     # Construct SGPA graph
-    if graph_check[3] in graphs_to_const:
-        G_SGPA, _, _ = sgpa(bc.num_brain_nodes, bc.num_brain_edges_directed, L=LENGTH_SCALE)
+    if 'SGPA' in graphs_to_const:
+        G_SGPA, _, _ = sgpa(bc.num_brain_nodes, bc.num_brain_edges_directed,
+                            L=LENGTH_SCALE)
         graph_list.append(G_SGPA.to_undirected())
 
+        # Construct degree-controlled SGPA graph
+        if 'SGPA-random' in graphs_to_const:
+            SGPA_degree = nx.degree(G_SGPA).values()
+            G_SGPA_RAND, _, _ = und_graphs.random_simple_deg_seq(
+                sequence=SGPA_degree, brain_size=brain_size, tries=100)
+            graph_list.append(G_SGPA_RAND)
+
     # Error check that we created correct number of graphs
-    assert len(graph_list) == len(graphs_to_const), (
-        'Graph list/names don\'t match')
+    if len(graph_list) != len(graphs_to_const):
+        raise RuntimeError('Graph list/names don\'t match')
 
     return graph_list
 
@@ -124,7 +132,7 @@ if gen_directed:
     graph_names = ['Connectome', 'Random', 'SGPA']
 else:
     graph_names = ['Connectome', 'Random', 'Small-world', 'Scale-free',
-                   'SGPA']
+                   'SGPA', 'SGPA-random']
 
 # Directed
 if gen_directed:
@@ -138,7 +146,9 @@ if gen_directed:
 # Undirected
 else:
     func_list = [(perc.lesion_met_largest_component, 'Largest component'),
-                 (und_metrics.global_efficiency, 'Global efficiency')]
+                 #(und_metrics.global_efficiency, 'Global efficiency'),
+                 (und_metrics.edge_count, 'Edge count')]
+
 
 #################
 # Do percolation
@@ -152,6 +162,8 @@ if not save_files and repeats > 10:
 # Matrices for random and targetted attacks
 rand = np.zeros((len(graph_names), len(func_list), len(prop_rm), repeats))
 targ = np.zeros((len(graph_names), len(func_list), len(lesion_list), repeats))
+targ_thresh = np.zeros((len(graph_names), len(func_list), len(thresh_list),
+                        repeats))
 
 # Percolation
 for ri in np.arange(repeats):
@@ -167,12 +179,13 @@ for ri in np.arange(repeats):
 
     # Cycle over graphs and metric functions
     for gi, G in enumerate(graph_list):
-        print '\tLesioning: ' + graph_names[gi],
         for fi, (func, func_label) in enumerate(func_list):
-            rand[gi, fi, :, ri] = perc.percolate_random(G.copy(), prop_rm,
-                                                        func)
+            #rand[gi, fi, :, ri] = perc.percolate_random(G.copy(), prop_rm,
+            #                                            func)
             targ[gi, fi, :, ri] = perc.percolate_degree(G.copy(), lesion_list,
                                                         func)
+            targ_thresh[gi, fi, :, ri] = perc.percolate_degree_thresh(
+                G.copy(), thresh_list, func)
         print ' ... Done'
 
 ###############
@@ -194,14 +207,17 @@ if save_files:
                              '_undirected_perc.pkl')
 
         outfile = open(save_fname, 'wb')
-        pickle.dump({'graph_name': graph_names[gi], 'metrics_list':
-                    [f.func_name for (f, f_label) in func_list],
-                    'repeats': repeats,
-                    'metrics_label': [f_label for (f, f_label) in func_list],
-                    'data_rand': rand[gi, :, :, :],
-                    'data_targ': targ[gi, :, :, :],
-                    'removed_rand': prop_rm,
-                    'removed_targ': lesion_list}, outfile)
+        pickle.dump({'graph_name': graph_names[gi],
+                     'metrics_list': [f.func_name for (f, f_label) in
+                                      func_list],
+                     'repeats': repeats,
+                     'metrics_label': [f_label for (f, f_label) in func_list],
+                     'data_rand': rand[gi, :, :, :],
+                     'data_targ': targ[gi, :, :, :],
+                     'data_targ_thresh': targ_thresh[gi, :, :, :],
+                     'removed_rand': prop_rm,
+                     'removed_targ': lesion_list,
+                     'removed_targ_thresh': thresh_list}, outfile)
         outfile.close()
 
         print ' ... Done'
