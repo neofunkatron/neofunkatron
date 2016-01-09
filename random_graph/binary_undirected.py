@@ -107,6 +107,7 @@ def random_simple_deg_seq(sequence, brain_size=[7., 7., 7.], seed=None,
             Degree of each node to be added to the graph.
         brain_size: list of 3 floats
             Size of the brain to use when distributing  node locations.
+            Added for convenience, but does not affect connectivity pattern.
         seed: hashable object for random seed
             Seed for the random number generator.
         tries: int

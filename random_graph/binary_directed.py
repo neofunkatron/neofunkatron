@@ -15,19 +15,26 @@ import aux_random_graphs
 import brain_constants as bc
 
 
-def target_attraction(N=bc.num_brain_nodes, N_edges=bc.num_brain_edges_directed, L=np.inf,
-                      gamma=1., brain_size=[7., 7., 7.]):
-    """Create a graph based on the target attraction rule. Source selection is random, but target selection
-    probability is proportional to indegree^gamma, and optionally dependent on distance through length constant L.
+def target_attraction(N=bc.num_brain_nodes,
+                      N_edges=bc.num_brain_edges_directed, L=np.inf, gamma=1.,
+                      brain_size=[7., 7., 7.]):
+    """Create a graph based on the target attraction rule. Source selection is
+    random, but target selection probability is proportional to indegree^gamma,
+    and optionally dependent on distance through length constant L.
 
-    Args:
+    Parameters:
+    -----------
+
         N: how many nodes
         N_edges: how many edges
         L: length constant
         gamma: power to raise degree to
         brain_size: size of space in which nodes are randomly placed
+
     Returns:
+    --------
         Networkx graph object, adjacency matrix, distance matrix"""
+
     # Pick node positions & calculate distance matrix
     centroids = np.random.uniform([0, 0, 0], brain_size, (N, 3))
 
@@ -96,18 +103,24 @@ def target_attraction(N=bc.num_brain_nodes, N_edges=bc.num_brain_edges_directed,
 
 def source_growth(N=bc.num_brain_nodes, N_edges=bc.num_brain_edges_directed,
                   L=np.inf, gamma=1., brain_size=(7., 7., 7.)):
-    """Create a graph based on the source growth rule. Source selection probability is proportional to
-    out-degree^gamma, and target selection is either random or  dependent on distance (through length
+    """Create a graph based on the source growth rule.
+
+    Source selection probability is proportional to out-degree^gamma, and
+    target selection is either random or  dependent on distance (through length
     constant L).
 
-    Args:
+    Parameters:
+    -----------
+
         N: how many nodes
         N_edges: how many edges
         L: length constant
         gamma: power to raise degree to
         brain_size: size of space in which nodes are randomly placed
+
     Returns:
-        Networkx graph object, adjacency matrix, distance matrix"""
+    --------
+        G, A, D: Networkx graph object, adjacency matrix, distance matrix"""
 
     # Pick node positions & calculate distance matrix
     if brain_size == 'brain':
@@ -233,13 +246,20 @@ def random_directed_deg_seq(in_sequence, out_sequence, simplify,
 
 def growing_sgpa(n_nodes, p_edge_split, l, brain_size, remove_extra_ccs):
     """
-    Grow a source-growth-proximal-attachment graph by adding nodes one at a time.
-    :param n_nodes: number of total nodes
-    :param p_edge_split: probability that an edge splits in one time step
-    :param l: length constant
-    :param brain_size: size of brain to uniformly distribute node positions within
-    :param prune: whether or not to remove nodes that have no edges
-    :return: graph
+    Grow a source-growth-proximal-attachment graph by adding nodes one at a
+    time.
+
+    Parameters:
+    -----------
+    n_nodes: number of total nodes
+    p_edge_split: probability that an edge splits in one time step
+    l: length constant
+    brain_size: size of brain to uniformly distribute node positions within
+    prune: whether or not to remove nodes that have no edges
+
+    Returns:
+    --------
+    G: SGPA networkX graph
     """
 
     def random_pos():
@@ -265,8 +285,8 @@ def growing_sgpa(n_nodes, p_edge_split, l, brain_size, remove_extra_ccs):
                 targs = [node for node in G.nodes() if node != src]
                 # determine target
                 dists = np.array(
-                    [np.linalg.norm(G.node[src]['pos'] - G.node[targ]['pos']) for targ in targs]
-                )
+                    [np.linalg.norm(G.node[src]['pos'] - G.node[targ]['pos'])
+                     for targ in targs])
                 probs = np.exp(-dists/l)
                 probs /= probs.sum()
                 targ = np.random.choice(targs, p=probs)
