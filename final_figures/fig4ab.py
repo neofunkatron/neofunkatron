@@ -15,16 +15,16 @@ MARKERSIZE = 25.
 FONTSIZE = 12.
 ALPHA = 0.5
 
-L = 0.75
-
+L = 0.725
+BRAIN_SIZE = [7., 7., 7.]
 
 # create attachment and growth models
 Gattachment, _, _ = target_attraction(
-    N=bc.num_brain_nodes, N_edges=bc.num_brain_edges_directed, L=L, gamma=1.
+    N=bc.num_brain_nodes, N_edges=bc.num_brain_edges_directed, L=L, gamma=1., brain_size=BRAIN_SIZE,
 )
 
 Ggrowth, _, _ = source_growth(
-    N=bc.num_brain_nodes, N_edges=bc.num_brain_edges_directed, L=L, gamma=1.
+    N=bc.num_brain_nodes, N_edges=bc.num_brain_edges_directed, L=L, gamma=1., brain_size=BRAIN_SIZE,
 )
 
 # Get in- & out-degree

@@ -10,9 +10,8 @@ from itertools import product as cproduct
 import numpy as np
 import os
 import pandas as pd
+import xlrd  # check import works since it's used within pandas to read xlsx
 import urllib
-
-import aux_random_graphs
 
 DATA_FILE_URL = 'http://www.nature.com/nature/journal/v508/n7495/extref/nature13186-s4.xlsx'
 DATA_FILE_NAME = 'nature13186-s4.xlsx'
@@ -23,6 +22,8 @@ DIST_DATA_FILE_NAME = 'nature13186-s5.xlsx'
 def load_W_and_P():
     """Load weight and p-value matrices."""
 
+    # Download mouse connectome data if it doesn't exist from
+    # "A mesoscale connectome of the mouse brain" by Oh et al., 2015 Nature
     if not os.path.exists(DATA_FILE_NAME):
         print('Downloading data to {}...'.format(DATA_FILE_NAME))
         urllib.urlretrieve(DATA_FILE_URL, DATA_FILE_NAME)
