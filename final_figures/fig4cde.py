@@ -21,6 +21,7 @@ N_REPEATS = 100
 ALPHA = .3
 FONT_SIZE = 20
 D_BINS = np.linspace(0, 12, 30)
+L = 0.725
 
 if not os.path.isfile(TEMP_FILE_NAME):
     # load brain graph
@@ -38,20 +39,20 @@ if not os.path.isfile(TEMP_FILE_NAME):
         N_edges=bc.num_brain_edges_directed,
         L=np.inf, gamma=1, brain_size=BRAIN_SIZE,
     )
-    g_sg_l_075, a_sg_l_075, d_sg_l_075 = source_growth(
+    g_sg_l_0725, a_sg_l_0725, d_sg_l_0725 = source_growth(
         N=bc.num_brain_nodes,
         N_edges=bc.num_brain_edges_directed,
-        L=0.75, gamma=1, brain_size=BRAIN_SIZE,
+        L=L, gamma=1, brain_size=BRAIN_SIZE,
     )
     g_ta_l_inf, a_ta_l_inf, d_ta_l_inf = target_attraction(
         N=bc.num_brain_nodes,
         N_edges=bc.num_brain_edges_directed,
         L=np.inf, gamma=1, brain_size=BRAIN_SIZE,
     )
-    g_ta_l_075, a_ta_l_075, d_ta_l_075 = target_attraction(
+    g_ta_l_0725, a_ta_l_0725, d_ta_l_0725 = target_attraction(
         N=bc.num_brain_nodes,
         N_edges=bc.num_brain_edges_directed,
-        L=0.75, gamma=1, brain_size=BRAIN_SIZE,
+        L=L, gamma=1, brain_size=BRAIN_SIZE,
     )
 
     # make graphs and calculate and save reciprocities if this haven't been done already
@@ -98,9 +99,9 @@ if not os.path.isfile(TEMP_FILE_NAME):
     r_dists = {}
     non_r_dists = {}
     r_dists['sg_l_inf'], non_r_dists['sg_l_inf'] = metrics.dists_by_reciprocity(a_sg_l_inf, d_sg_l_inf)
-    r_dists['sg_l_075'], non_r_dists['sg_l_075'] = metrics.dists_by_reciprocity(a_sg_l_075, d_sg_l_075)
+    r_dists['sg_l_0725'], non_r_dists['sg_l_0725'] = metrics.dists_by_reciprocity(a_sg_l_0725, d_sg_l_0725)
     r_dists['ta_l_inf'], non_r_dists['ta_l_inf'] = metrics.dists_by_reciprocity(a_ta_l_inf, d_ta_l_inf)
-    r_dists['ta_l_075'], non_r_dists['ta_l_075'] = metrics.dists_by_reciprocity(a_ta_l_075, d_ta_l_075)
+    r_dists['ta_l_0725'], non_r_dists['ta_l_0725'] = metrics.dists_by_reciprocity(a_ta_l_0725, d_ta_l_0725)
 
     r_dists_bincs = {}
     r_dists_cts = {}
@@ -190,9 +191,9 @@ axs[0].set_ylim(0, .7)
 axs[1].set_title('Growth models')
 axs[1].set_xlabel('Distance (mm)')
 
-axs[1].hist(r_dists['sg_l_075'], bins=D_BINS, lw=0, color='r', normed=True, alpha=0.5)
-axs[1].hist(non_r_dists['sg_l_075'], bins=D_BINS, lw=0, color='k', normed=True, alpha=0.5)
-axs[1].legend(['SG (L=0.75) \nRecip.', 'SG (L=0.75) \nNon-Recip.'])
+axs[1].hist(r_dists['sg_l_0725'], bins=D_BINS, lw=0, color='r', normed=True, alpha=0.5)
+axs[1].hist(non_r_dists['sg_l_0725'], bins=D_BINS, lw=0, color='k', normed=True, alpha=0.5)
+axs[1].legend(['SG (L={}) \nRecip.'.format(L), 'SG (L={}) \nNon-Recip.'.format(L)])
 
 axs[1].set_xticks([0, 4, 8, 12])
 axs[1].set_yticklabels([])
@@ -218,11 +219,12 @@ axs[2].fill_between(rs['LS'][1:], rand_mean - rand_std, rand_mean + rand_std, co
 axs[2].set_xlim(0, 2)
 axs[2].set_ylim(0, .7)
 
-axs[0].text(.2, .64, 'c', fontweight='bold', fontsize=FONT_SIZE)
-axs[1].text(.2, .64, 'd', fontweight='bold', fontsize=FONT_SIZE)
-axs[2].text(.03, .64, 'e', fontweight='bold', fontsize=FONT_SIZE)
+axs[0].text(.4, .64, 'c', fontweight='bold', fontsize=FONT_SIZE)
+axs[1].text(.4, .64, 'd', fontweight='bold', fontsize=FONT_SIZE)
+axs[2].text(.06, .64, 'e', fontweight='bold', fontsize=FONT_SIZE)
 
 for ax in axs:
     set_fontsize(ax, FONT_SIZE)
 
 fig.savefig('fig4cde.pdf')
+plt.show(block=True)

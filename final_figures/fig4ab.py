@@ -15,7 +15,7 @@ MARKERSIZE = 25.
 FONTSIZE = 12.
 ALPHA = 0.5
 
-L = 0.75
+L = 0.725
 
 
 # create attachment and growth models
