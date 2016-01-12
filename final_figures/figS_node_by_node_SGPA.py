@@ -12,18 +12,18 @@ from network_plot import change_settings
 import in_out_plot_config as cf
 
 N_NODES = 426
-P_EDGE_SPLIT = 0.016
-L = 0.75
+P_EDGE_SPLIT = 0.01612
+L = 0.725
 BRAIN_SIZE = [7., 7., 7.]
 MARKERSIZE = 25
 
 FONT_SIZE = 12
+SAVE_FILE_NAME_IN_OUT = 'node_by_node_in_and_out.pdf'
+SAVE_FILE_NAME_NODAL_EFF = 'node_by_node_cc_deg_nodal_eff.pdf'
 
-# Use environmental variable
-SAVE_DIR = os.environ['DBW_SAVE_CACHE']
 
 # create model
-G = growing_SGPA_1(N_NODES, P_EDGE_SPLIT, L, BRAIN_SIZE, remove_extra_ccs=True)
+G = growing_sgpa(N_NODES, P_EDGE_SPLIT, L, BRAIN_SIZE, remove_extra_ccs=True)
 G = nx.convert_node_labels_to_integers(G)  # remove nodes not in main network
 
 # Initialize the figure and axes objects
@@ -175,7 +175,7 @@ cbar_ax.yaxis.set_tick_params(size=0)
 jet_grad = np.linspace(0, 1, 256)  # Jet gradient for Old->New
 cbar_ax.imshow(np.vstack((jet_grad, jet_grad)), aspect='auto', cmap=cm.jet)
 
-fig.savefig(os.path.join(SAVE_DIR, 'node_by_node_in_and_out.png'), dpi=300)
+fig.savefig(SAVE_FILE_NAME_IN_OUT, dpi=300)
 
 # plot clustering vs degree and nodal efficiency
 fig, axs = plt.subplots(1, 2, figsize=(7.5, 3.5), tight_layout=True,
@@ -222,5 +222,4 @@ for ax, label in zip(axs, labels):
     ax.text(0.915, 0.925, label, fontsize=FONT_SIZE + 2, fontweight='bold',
             transform=ax.transAxes,  ha='center', va='center')
 
-fig.savefig(os.path.join(SAVE_DIR, 'node_by_node_cc_deg_nodal_eff.png'),
-            dpi=300)
+fig.savefig(SAVE_FILE_NAME_NODAL_EFF, dpi=300)
