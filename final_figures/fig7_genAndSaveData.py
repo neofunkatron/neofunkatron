@@ -12,12 +12,11 @@ from extract import brain_graph
 from metrics import percolation as perc
 from metrics import binary_undirected as und_metrics
 import brain_constants as bc
-from random_graph.binary_directed import source_growth as sgpa
+from random_graph.binary_directed import source_growth
 from random_graph import binary_undirected as und_graphs
 
 from config.graph_parameters import LENGTH_SCALE
-
-repeats = 1  # Number of times to repeat percolation
+repeats = 100  # Number of times to repeat percolation
 prop_rm = np.arange(0., 1.00, 0.05)
 lesion_list = np.arange(0, 426, 10)
 thresh_list = np.arange(150, -1, -5)
@@ -25,7 +24,7 @@ node_order = 426
 brain_size = [7., 7., 7.]
 
 save_dir = os.environ['DBW_SAVE_CACHE']
-save_files = False
+save_files = True
 gen_directed = False
 ##############################################################################
 
@@ -39,7 +38,7 @@ def construct_graph_list_und(graphs_to_const):
     graph_list = []
 
     # Always construct and add Allen Institute mouse brain to list
-    G_brain, _, _ = brain_graph.binary_undirected()
+    G_brain = brain_graph.binary_undirected()[0]
     graph_list.append(G_brain)
 
     # Calculate degree & clustering coefficient distribution
@@ -50,8 +49,8 @@ def construct_graph_list_und(graphs_to_const):
 
     # Construct degree controlled random
     if 'Random' in graphs_to_const:
-        G_RAND, _, _ = und_graphs.random_simple_deg_seq(
-            sequence=brain_degree, brain_size=brain_size, tries=100)
+        G_RAND = und_graphs.random_simple_deg_seq(
+            sequence=brain_degree, brain_size=brain_size, tries=1000)[0]
         graph_list.append(G_RAND)
 
     # Construct small-world graph
@@ -66,15 +65,15 @@ def construct_graph_list_und(graphs_to_const):
 
     # Construct SGPA graph
     if 'SGPA' in graphs_to_const:
-        G_SGPA, _, _ = sgpa(bc.num_brain_nodes, bc.num_brain_edges_directed,
-                            L=LENGTH_SCALE)
+        G_SGPA = source_growth(bc.num_brain_nodes, bc.num_brain_edges_directed,
+                               L=LENGTH_SCALE)[0]
         graph_list.append(G_SGPA.to_undirected())
 
         # Construct degree-controlled SGPA graph
         if 'SGPA-random' in graphs_to_const:
             SGPA_degree = nx.degree(G_SGPA).values()
-            G_SGPA_RAND, _, _ = und_graphs.random_simple_deg_seq(
-                sequence=SGPA_degree, brain_size=brain_size, tries=100)
+            G_SGPA_RAND = und_graphs.random_simple_deg_seq(
+                sequence=SGPA_degree, brain_size=brain_size, tries=1000)[0]
             graph_list.append(G_SGPA_RAND)
 
     # Error check that we created correct number of graphs
