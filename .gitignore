@@ -12,3 +12,5 @@
 *.png
 *.npy
 /save
+.ipynb_checkpoints
+.idea
