@@ -10,4 +10,5 @@
 *.xlsx
 *.pdf
 *.png
+*.npy
 /save
