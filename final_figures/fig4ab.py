@@ -117,10 +117,10 @@ right_margin_ax.set_xlabel('$P(k_\mathrm{out})$', va='top')
 # Right main plot (proportion in vs total degree)
 right_main_ax.scatter(deg_growth, percent_indeg_growth, s=MARKERSIZE, lw=0,
                       c=color_scheme.SRCGROWTH, alpha=ALPHA,
-                      label='Source growth', zorder=3)
+                      label='SGPA', zorder=3)
 right_main_ax.scatter(deg_attachment, percent_indeg_attachment,
                       s=MARKERSIZE, lw=0, c=color_scheme.TARGETATTRACTION,
-                      alpha=ALPHA, label='Target attraction')
+                      alpha=ALPHA, label='TAPA')
 right_main_ax.xaxis.set_major_locator(plt.MaxNLocator(4))
 right_main_ax.set_yticks(np.arange(0, 1.1, .25))
 right_main_ax.set_xticks(np.arange(0, 151, 50))

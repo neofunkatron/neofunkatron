@@ -45,9 +45,9 @@ COLORS = {
     'brain': color_scheme.ATLAS,
 }
 LW = 3
-SCATTER_SIZE = 10
-LABELS = ['Random', 'SG (topo only)', 'Pure geometric', 'SG']
-BAR_LABELS = ['Rand.', 'SG topo.', 'Geom.', 'SG']
+SCATTER_SIZE = 15
+LABELS = ['Random', 'SG', 'Pure geom.', 'SGPA']
+BAR_LABELS = ['Rand.', 'SG', 'Pure geom.', 'SGPA']
 ERROR_KW = {'ecolor': 'k', 'elinewidth': 2, 'markeredgewidth': 2, 'capsize': 6}
 
 BINS_NODAL_EFFICIENCY = np.linspace(0, 1, 25)
@@ -264,6 +264,3 @@ print(zip(PLOT_KEYS, gamma_median_r_squareds))
 print('brain: ', fits_r_squared['brain'])
 
 fig.savefig('nodal_eff_and_cc.pdf')
-
-plt.draw()
-plt.show(block=True)

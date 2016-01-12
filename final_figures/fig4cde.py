@@ -179,7 +179,7 @@ axs[0].set_title('Connectome')
 axs[0].set_xlabel('Distance (mm)')
 axs[0].set_ylabel('Probability')
 
-axs[0].hist(r_dists_brain.flatten(), bins=D_BINS, lw=0, facecolor='r', normed=True, alpha=0.5)
+axs[0].hist(r_dists_brain.flatten(), bins=D_BINS, lw=0, facecolor='b', normed=True, alpha=0.5)
 axs[0].hist(non_r_dists_brain.flatten(), bins=D_BINS, lw=0, facecolor='k', normed=True, alpha=0.5)
 
 axs[0].legend(['Recip.', 'Non-Recip.'], fontsize=FONT_SIZE)
@@ -191,9 +191,9 @@ axs[0].set_ylim(0, .7)
 axs[1].set_title('Growth models')
 axs[1].set_xlabel('Distance (mm)')
 
-axs[1].hist(r_dists['sg_l_0725'], bins=D_BINS, lw=0, color='r', normed=True, alpha=0.5)
+axs[1].hist(r_dists['sg_l_0725'], bins=D_BINS, lw=0, color='b', normed=True, alpha=0.5)
 axs[1].hist(non_r_dists['sg_l_0725'], bins=D_BINS, lw=0, color='k', normed=True, alpha=0.5)
-axs[1].legend(['SG (L={}) \nRecip.'.format(L), 'SG (L={}) \nNon-Recip.'.format(L)])
+axs[1].legend(['SGPA (L={}) \nRecip.'.format(L), 'SGPA (L={}) \nNon-Recip.'.format(L)])
 
 axs[1].set_xticks([0, 4, 8, 12])
 axs[1].set_yticklabels([])
@@ -207,10 +207,10 @@ axs[2].set_ylabel('Reciprocity coefficient')
 
 axs[2].plot(rs['LS'][1:], sg_mean, color=cs.SRCGROWTH, lw=2)
 axs[2].plot(rs['LS'][1:], ta_mean, color=cs.TARGETATTRACTION, lw=2)
-axs[2].plot(rs['LS'][1:], rand_mean, color=cs.RANDOM, lw=2)
+axs[2].plot(rs['LS'][1:], rand_mean, color=cs.CONFIG, lw=2)
 axs[2].axhline(brain_recip, color=cs.ATLAS, ls='--', lw=2)
 
-axs[2].legend(['SG', 'TA', 'Random', 'Connectome'], fontsize=FONT_SIZE)
+axs[2].legend(['SGPA', 'TAPA', 'Random', 'Connectome'], fontsize=FONT_SIZE)
 
 axs[2].fill_between(rs['LS'][1:], sg_mean - sg_std, sg_mean + sg_std, color=cs.SRCGROWTH, alpha=ALPHA)
 axs[2].fill_between(rs['LS'][1:], ta_mean - ta_std, ta_mean + ta_std, color=cs.TARGETATTRACTION, alpha=ALPHA)
