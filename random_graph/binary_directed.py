@@ -308,6 +308,96 @@ def growing_sgpa(n_nodes, p_edge_split, l, brain_size, remove_extra_ccs):
     return G
 
 
+def source_growth_total_degree(N=bc.num_brain_nodes, N_edges=bc.num_brain_edges_directed,
+                  L=np.inf, gamma=1., brain_size=(7., 7., 7.)):
+    """Create a graph based in which source growth depends on total, not out-degree.
+
+    Source selection probability is proportional to total degree^gamma, and
+    target selection is either random or  dependent on distance (through length
+    constant L).
+
+    Parameters:
+    -----------
+
+        N: how many nodes
+        N_edges: how many edges
+        L: length constant
+        gamma: power to raise degree to
+        brain_size: size of space in which nodes are randomly placed
+
+    Returns:
+    --------
+        G, A, D: Networkx graph object, adjacency matrix, distance matrix"""
+
+    # Pick node positions & calculate distance matrix
+    centroids = np.random.uniform([0, 0, 0], brain_size, (N, 3))
+
+    # Calculate distance matrix and distance decay matrix
+    D = aux_tools.dist_mat(centroids)
+    D_decay = np.exp(-D / L)
+
+    # Initialize diagonal adjacency matrix
+    A = np.eye(N, dtype=float)
+
+    # Make graph object
+    G = nx.DiGraph()
+    G.add_nodes_from(np.arange(N))
+    G.centroids = centroids
+
+    # Randomly add edges
+    edge_ctr = 0
+    while edge_ctr < N_edges:
+        # Update degree list & degree-related probability vector
+        outdegs = A.sum(1).astype(float)
+        indegs = A.sum(0).astype(float)
+        total_degs = outdegs + indegs
+        total_degs_prob = total_degs.copy()
+
+        # Calculate source node probability
+        P = total_degs_prob ** gamma
+        # On the off chance that P == 0, skip
+        if P.sum() == 0:
+            continue
+        # Otherwise keep going on
+        P /= float(P.sum())  # Normalize probabilities to sum to 1
+
+        # Sample node from distribution
+        src_idx = np.random.choice(np.arange(N), p=P)
+
+        D_src = D_decay[src_idx, :]
+
+        # Find unavailable cxns and set their probability to zero
+        unavail_mask = A[src_idx, :] > 0
+        D_src[unavail_mask] = 0
+
+        # Set self-connection probability to 0
+        D_src[src_idx] = 0
+
+        D_src /= float(D_src.sum())
+
+        # Pick random node to draw edge to
+        targ_idx = np.random.choice(np.arange(N), p=D_src)
+
+        # Skip this node if already fully connected
+        if outdegs[src_idx] == N:
+            continue
+
+        # Add edge to graph
+        if A[src_idx, targ_idx] == 0:
+            G.add_edge(src_idx, targ_idx, {'d': D[src_idx, targ_idx]})
+
+        # Add edge to adjacency matrix
+        A[src_idx, targ_idx] += 1
+
+        # Increment edge counter
+        edge_ctr += 1
+
+    # Set diagonals to zero
+    np.fill_diagonal(A, 0)
+
+    return G, A.astype(int), D
+
+
 ###################################################################
 # Everything that follows is unused. Meaning we should delete it. #
 ###################################################################
