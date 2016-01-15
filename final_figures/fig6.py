@@ -23,7 +23,7 @@ import color_scheme
 L = 0.725
 BRAIN_SIZE = [7., 7., 7.]
 KEYS = ['er', 'rand', 'ta', 'sg', 'sg_topo', 'geom']
-PLOT_KEYS = ['rand', 'sg_topo', 'geom', 'sg']
+PLOT_KEYS = ['rand', 'geom', 'sg']
 
 FACE_COLOR = 'w'
 AX_COLOR = 'k'
@@ -40,14 +40,13 @@ DEGREE_VS_CLUSTERING_GRAPH_IDX = 0
 COLORS = {
     'rand': color_scheme.CONFIG,
     'sg': color_scheme.SRCGROWTH,
-    'sg_topo': color_scheme.SGTOPO,
     'geom': color_scheme.GEOMDIRECTED,
     'brain': color_scheme.ATLAS,
 }
 LW = 3
 SCATTER_SIZE = 15
-LABELS = ['Random', 'SG', 'Pure geom.', 'SGPA']
-BAR_LABELS = ['Rand.', 'SG', 'Pure geom.', 'SGPA']
+LABELS = ['Random', 'Pure geom.', 'SGPA']
+BAR_LABELS = ['Rand.', 'Pure geom.', 'SGPA']
 ERROR_KW = {'ecolor': 'k', 'elinewidth': 2, 'markeredgewidth': 2, 'capsize': 6}
 
 BINS_NODAL_EFFICIENCY = np.linspace(0, 1, 25)
