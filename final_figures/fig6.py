@@ -45,8 +45,8 @@ COLORS = {
 }
 LW = 3
 SCATTER_SIZE = 15
-LABELS = ['Random', 'Pure geom.', 'SGPA']
-BAR_LABELS = ['Rand.', 'Pure geom.', 'SGPA']
+LABELS = ['Random', 'PA', 'SGPA']
+BAR_LABELS = ['Rand. ', 'PA ', 'SGPA ']
 ERROR_KW = {'ecolor': 'k', 'elinewidth': 2, 'markeredgewidth': 2, 'capsize': 6}
 
 BINS_NODAL_EFFICIENCY = np.linspace(0, 1, 25)
@@ -240,15 +240,15 @@ for ax, text in zip(axs, texts):
 
 # add inset with power-law fit bar plot
 ax_inset = fig.add_axes(INSET_COORDINATES)
-gamma_means = [power_law_fits[key].mean() for key in PLOT_KEYS]
-gamma_stds = [power_law_fits[key].std() for key in PLOT_KEYS]
-gamma_median_r_squareds = [np.median(fits_r_squared[key]) for key in PLOT_KEYS]
+gamma_means = [power_law_fits[key].mean() for key in PLOT_KEYS + ['brain']]
+gamma_stds = [power_law_fits[key].std() for key in PLOT_KEYS + ['brain']]
+gamma_median_r_squareds = [np.median(fits_r_squared[key]) for key in PLOT_KEYS + ['brain']]
 colors = [COLORS[key] for key in PLOT_KEYS]
 
 bar_width = .8
 x_pos = np.arange(len(PLOT_KEYS)) - bar_width/2
 
-ax_inset.bar(x_pos, gamma_means, width=bar_width, color=colors, yerr=gamma_stds, error_kw=ERROR_KW)
+ax_inset.bar(x_pos, gamma_means[:-1], width=bar_width, color=colors, yerr=gamma_stds[:-1], error_kw=ERROR_KW)
 ax_inset.bar([-bar_width/2 + len(PLOT_KEYS)], power_law_fits['brain'], width=bar_width, color=COLORS['brain'])
 ax_inset.set_xticks(np.arange(len(PLOT_KEYS) + 1))
 ax_inset.set_xticklabels(BAR_LABELS + ['Connectome'], rotation='vertical')
@@ -259,7 +259,11 @@ ax_inset.set_ylabel(r'$\gamma$')
 change_settings.set_all_colors(ax_inset, AX_COLOR)
 change_settings.set_all_text_fontsizes(ax_inset, FONT_SIZE)
 
-print(zip(PLOT_KEYS, gamma_median_r_squareds))
-print('brain: ', fits_r_squared['brain'])
+print('gamma means')
+print(zip(PLOT_KEYS + ['brain'], gamma_means))
+print('gamma stds')
+print(zip(PLOT_KEYS + ['brain'], gamma_stds))
+print('median R^2s')
+print(zip(PLOT_KEYS + ['brain'], gamma_median_r_squareds))
 
 fig.savefig('nodal_eff_and_cc.pdf')
