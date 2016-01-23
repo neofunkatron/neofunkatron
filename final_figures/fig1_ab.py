@@ -4,20 +4,20 @@ Created on Wed May 13th 2015
 @author: wronk
 degree_dists_undirected.py
 
-Plot undirected degree distributions for brain and standard graphs
+Fig 1ab: Plot undirected degree distributions for brain and standard graphs
 """
 
 import os
 import numpy as np
-import networkx as nx
 import matplotlib.pyplot as plt
-import extract.brain_graph
-import config
-
-from network_plot.change_settings import set_all_text_fontsizes
-
+import networkx as nx
 from networkx import barabasi_albert_graph as ba
 from networkx import watts_strogatz_graph as ws
+
+from network_plot.change_settings import set_all_text_fontsizes
+import extract.brain_graph
+import config
+from config.graph_parameters import SW_REWIRE_PROB
 
 load_dir = os.environ['DBW_SAVE_CACHE']
 ###############################################
@@ -60,9 +60,7 @@ def hist_plot(ax, deg_dists, colors, graph_names, graph_ls):
 
     # Set axis limits and ticks, and label subplots
     ax.set_xlim([0, 150])
-    #ax.set_ylim([0, .15])
     ax.locator_params(axis='x', nbins=5)
-    #a.locator_params(axis='y', nbins=5)
 
     # Set title
     ax.set_title('Degree Distributions')
@@ -73,7 +71,6 @@ def hist_plot(ax, deg_dists, colors, graph_names, graph_ls):
 
     # Set all fontsizes and axis colors
     set_all_text_fontsizes(ax, FONT_SIZE)
-    #set_all_colors(ax, 'w')
 
 ###############################################
 # Calculate degree distributions for all graphs
@@ -89,7 +86,7 @@ brain_degree = nx.degree(G_brain).values()
 brain_degree_mean = np.mean(brain_degree)
 
 # Initialize repetition matrices for standard graphs
-#ER_deg_mat = -1 * np.ones((repeats, n_nodes))
+# ER_deg_mat = -1 * np.ones((repeats, n_nodes))
 RAND_deg_mat = -1 * np.ones((repeats, n_nodes))
 WS_deg_mat = -1 * np.ones((repeats, n_nodes))
 BA_deg_mat = -1 * np.ones((repeats, n_nodes))
@@ -104,7 +101,7 @@ for r in np.arange(repeats):
 
     # Watts-Strogatz
     WS_deg_mat[r, :] = ws(n_nodes, int(round(brain_degree_mean)),
-                          0.23).degree().values()
+                          SW_REWIRE_PROB).degree().values()
 
     # Barabasi-Albert
     BA_deg_mat[r, :] = ba(n_nodes,
@@ -172,5 +169,8 @@ axs[2].legend_.remove()
 fig.set_tight_layout(True)
 fig.subplots_adjust(top=0.925, bottom=0.17, left=0.12, wspace=0.325)
 
+# Save figures
 fig.savefig(os.path.join(load_dir, 'fig1_ab.png'), dpi=300)
+fig.savefig(os.path.join(load_dir, 'fig1_ab.pdf'), dpi=300)
+
 plt.draw()
