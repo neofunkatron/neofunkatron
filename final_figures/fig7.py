@@ -47,7 +47,6 @@ plt.ion()
 col_d = cf.COLORS
 graph_col = [col_d['brain'], col_d['configuration'], col_d['small-world'],
              col_d['scale-free'], col_d['pgpa']]
-FACECOLOR = cf.FACE_COLOR
 
 LW = 2.5
 FONTSIZE = 13
@@ -59,7 +58,7 @@ FIGSIZE = (7.5, 4)
 ###########################################
 
 fig, ax_list = plt.subplots(nrows=1, ncols=2, figsize=FIGSIZE,
-                            facecolor=FACECOLOR)
+                            facecolor=cf.FACE_COLOR)
 metric_labels = ['Largest (giant) component', 'Global efficiency']
 
 for gi, g_dict in enumerate(graph_metrics_und):

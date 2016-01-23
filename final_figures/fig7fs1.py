@@ -20,7 +20,7 @@ import brain_constants as bc
 from random_graph.binary_directed import source_growth
 from random_graph.binary_undirected import random_simple_deg_seq
 
-from config.graph_parameters import LENGTH_SCALE
+from config.graph_parameters import LENGTH_SCALE, SW_REWIRE_PROB, BRAIN_SIZE
 
 save_dir = os.environ['DBW_SAVE_CACHE']
 load_dir = os.environ['DBW_SAVE_CACHE']
@@ -49,13 +49,13 @@ def construct_graph_list_und(graphs_to_const):
     # Construct degree controlled random
     if 'Random' in graphs_to_const:
         G_RAND = random_simple_deg_seq(sequence=brain_degree,
-                                       brain_size=brain_size, tries=1000)[0]
+                                       brain_size=BRAIN_SIZE, tries=1000)[0]
         graph_list.append(G_RAND)
 
     # Construct small-world graph
     if 'Small-world' in graphs_to_const:
         graph_list.append(nx.watts_strogatz_graph(
-            n_nodes, int(round(brain_degree_mean)), 0.23))
+            n_nodes, int(round(brain_degree_mean)), SW_REWIRE_PROB))
 
     # Construct scale-free graph
     if 'Scale-free' in graphs_to_const:
@@ -72,7 +72,7 @@ def construct_graph_list_und(graphs_to_const):
         if 'SGPA-random' in graphs_to_const:
             SGPA_degree = nx.degree(G_SGPA).values()
             G_SGPA_RAND = random_simple_deg_seq(
-                sequence=SGPA_degree, brain_size=brain_size, tries=1000)[0]
+                sequence=SGPA_degree, brain_size=BRAIN_SIZE, tries=1000)[0]
             graph_list.append(G_SGPA_RAND)
 
     # Error check that we created correct number of graphs
@@ -186,7 +186,6 @@ prop_rm = np.arange(0., 1.00, 0.05)
 lesion_list = np.arange(0, 426, 10)
 thresh_list = np.arange(150, -1, -5)
 node_order = 426
-brain_size = [7., 7., 7.]
 
 # Undirected
 func_names = ['Largest component', 'Global efficiency', 'Connection density']
