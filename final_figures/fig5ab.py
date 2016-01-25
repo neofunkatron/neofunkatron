@@ -29,7 +29,7 @@ G_attachment = target_attraction(N=bc.num_brain_nodes,
 
 G_growth = source_growth(N=bc.num_brain_nodes,
                          N_edges=bc.num_brain_edges_directed, L=L, gamma=1.,
-                         brain_size=BRAIN_SIZE)
+                         brain_size=BRAIN_SIZE)[0]
 
 # Get in- & out-degree
 indeg_attachment = np.array([G_attachment.in_degree()[node]
@@ -47,7 +47,7 @@ percent_indeg_attachment = indeg_attachment / deg_attachment.astype(float)
 percent_indeg_growth = indeg_growth / deg_growth.astype(float)
 
 # Make plots
-fig = plt.figure(figsize=(7.5, 4), facecolor='w', dpi=300.)
+fig = plt.figure(figsize=(7.5, 4), facecolor='w')
 plt.subplots_adjust(hspace=0.45, wspace=0.45)
 
 left_main_ax = plt.subplot2grid(cf.subplot_divisions, cf.left_main_location,
