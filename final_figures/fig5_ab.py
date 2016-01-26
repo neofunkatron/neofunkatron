@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 from random_graph.binary_directed import target_attraction, source_growth
 from network_plot.change_settings import set_all_text_fontsizes, set_all_colors
 import brain_constants as bc
-import color_scheme
+import config
 import in_out_plot_config as cf
 
 MARKERSIZE = 25.
@@ -70,11 +70,10 @@ right_margin_ax = plt.subplot2grid(cf.subplot_divisions,
                                    sharey=left_main_ax)
 
 # Left main plot (in vs out degree)
-left_main_ax.scatter(indeg_growth, outdeg_growth, c=color_scheme.SRCGROWTH,
+left_main_ax.scatter(indeg_growth, outdeg_growth, c=config.COLORS['sgpa'],
                      s=MARKERSIZE, lw=0, alpha=ALPHA, zorder=3)
 left_main_ax.scatter(indeg_attachment, outdeg_attachment,
-                     c=color_scheme.TARGETATTRACTION,
-                     s=MARKERSIZE, lw=0, alpha=ALPHA)
+                     c=config.COLORS['tapa'], s=MARKERSIZE, lw=0, alpha=ALPHA)
 left_main_ax.set_xlabel('In-degree')
 left_main_ax.set_ylabel('Out-degree')
 left_main_ax.set_xlim([0, 125])
@@ -86,20 +85,20 @@ left_main_ax.text(150, 150, 'a', fontsize=FONTSIZE + 2, fontweight='bold')
 
 # Top marginal (in-degree)
 top_margin_ax.hist(indeg_attachment, bins=cf.OUTDEGREE_BINS,
-                   histtype='stepfilled', color=color_scheme.TARGETATTRACTION,
+                   histtype='stepfilled', color=config.COLORS['tapa'],
                    alpha=ALPHA, label='Target attraction', normed=True,
                    stacked=True)
 top_margin_ax.hist(indeg_growth, bins=cf.OUTDEGREE_BINS, histtype='stepfilled',
-                   color=color_scheme.SRCGROWTH, alpha=ALPHA,
+                   color=config.COLORS['sgpa'], alpha=ALPHA,
                    label='Source growth', normed=True, stacked=True)
 
 # Right marginal (out-degree)
 right_margin_ax.hist(outdeg_attachment, bins=cf.OUTDEGREE_BINS,
-                     histtype='stepfilled',
-                     color=color_scheme.TARGETATTRACTION, alpha=ALPHA,
-                     orientation='horizontal', normed=True, stacked=True)
+                     histtype='stepfilled', color=config.COLORS['tapa'],
+                     alpha=ALPHA, orientation='horizontal', normed=True,
+                     stacked=True)
 right_margin_ax.hist(outdeg_growth, bins=cf.OUTDEGREE_BINS,
-                     histtype='stepfilled', color=color_scheme.SRCGROWTH,
+                     histtype='stepfilled', color=config.COLORS['sgpa'],
                      alpha=ALPHA, orientation='horizontal', normed=True,
                      stacked=True)
 for tick in right_margin_ax.get_xticklabels():
@@ -119,11 +118,10 @@ right_margin_ax.set_xlabel('$P(k_\mathrm{out})$', va='top')
 
 # Right main plot (proportion in vs total degree)
 right_main_ax.scatter(deg_growth, percent_indeg_growth, s=MARKERSIZE, lw=0,
-                      c=color_scheme.SRCGROWTH, alpha=ALPHA, label='SGPA',
+                      c=config.COLORS['sgpa'], alpha=ALPHA, label='SGPA',
                       zorder=3)
 right_main_ax.scatter(deg_attachment, percent_indeg_attachment, s=MARKERSIZE,
-                      lw=0, c=color_scheme.TARGETATTRACTION, alpha=ALPHA,
-                      label='TAPA')
+                      lw=0, c=config.COLORS['tapa'], alpha=ALPHA, label='TAPA')
 right_main_ax.xaxis.set_major_locator(plt.MaxNLocator(4))
 right_main_ax.set_yticks(np.arange(0, 1.1, .25))
 right_main_ax.set_xticks(np.arange(0, 151, 50))

@@ -27,7 +27,7 @@ FACECOLOR = config.FACE_COLOR
 FONT_SIZE = config.FONT_SIZE
 
 BRAIN_COLOR = config.COLORS['brain']
-RAND_COLOR = config.COLORS['configuration']
+RAND_COLOR = config.COLORS['random']
 WS_COLOR = config.COLORS['small-world']
 BA_COLOR = config.COLORS['scale-free']
 labels = ['a', 'b']

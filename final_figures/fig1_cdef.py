@@ -8,6 +8,7 @@ Fig 1 cdef, Plot clustering vs. degree for mouse connectome and standard
 random graphs.
 """
 
+import os
 import numpy as np
 import scipy.stats as stats
 import matplotlib.pyplot as plt
@@ -21,16 +22,21 @@ from network_plot.change_settings import set_all_text_fontsizes, set_all_colors
 # PLOTTING PARAMETERS
 FACECOLOR = config.FACE_COLOR
 FIGSIZE = (7.5, 2.25)
-FONT_SIZE = 14
+FONT_SIZE = 13
 MARKER_SIZE = 3
 # Colors for brain, random-degree controlled, small-world, scale-free graphs
-cols = [config.COLORS['brain'], config.COLORS['configuration'],
+cols = [config.COLORS['brain'], config.COLORS['random'],
         config.COLORS['small-world'], config.COLORS['scale-free']]
 DEG_MAX = 150
 DEG_TICKS = [0, 50, 100, 150]
 CC_TICKS = [0, .2, .4, .6, .8, 1.0]
 graph_names = ['Connectome', 'Random', 'Small-world', 'Scale-free']
 labels = ['c', 'd', 'e', 'f']  # Upper corner labels for each plot
+
+save_fig = True
+if save_fig:
+    save_dir = os.environ['DBW_SAVE_CACHE']
+
 plt.ion()
 plt.close('all')
 
@@ -119,12 +125,16 @@ for ax_i, ax in enumerate(axs):
     if ax_i == 0:
         ax.set_ylabel('Clustering\ncoefficient')
         ax.text(0.4, 0.85, r'R$^2$ = %.2f' % r_squared_vals[ax_i],
-                fontsize=FONT_SIZE - 3, transform=ax.transAxes)
+                fontsize=FONT_SIZE - 2, transform=ax.transAxes)
     else:
         ax.text(0.725, 0.85, '%0.2f' % r_squared_vals[ax_i],
-                fontsize=FONT_SIZE - 3, transform=ax.transAxes)
+                fontsize=FONT_SIZE - 2, transform=ax.transAxes)
         ax.set_yticklabels('')
 
 fig.set_tight_layout({'pad': 1.02, 'w_pad': 0.4})
+
+if save_fig:
+    fig.savefig(os.path.join(save_dir, 'fig1_cdef.png'), dpi=300)
+    fig.savefig(os.path.join(save_dir, 'fig1_cdef.pdf'), dpi=300)
 
 plt.show()

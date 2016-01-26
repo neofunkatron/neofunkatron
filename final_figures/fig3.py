@@ -8,7 +8,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 
-import color_scheme
+import config
 import in_out_plot_config as cf
 from network_plot.change_settings import set_all_text_fontsizes, set_all_colors
 from extract.brain_graph import binary_directed as brain_graph
@@ -25,7 +25,7 @@ if save:
 # Construct figure object and axes
 ###################################
 
-fig = plt.figure(figsize=(7.5, 4), facecolor='w')
+fig = plt.figure(figsize=(7.5, 4), facecolor=config.FACE_COLOR)
 plt.subplots_adjust(hspace=0.45, wspace=0.45)
 
 left_main_ax = plt.subplot2grid(cf.subplot_divisions, cf.left_main_location,
@@ -64,7 +64,7 @@ percent_indeg = indeg / deg.astype(float)
 a1 = 1.0
 
 # Left main plot (in vs out degree)
-left_main_ax.scatter(indeg, outdeg, c=color_scheme.ATLAS, s=cf.MARKERSIZE,
+left_main_ax.scatter(indeg, outdeg, c=config.COLORS['brain'], s=cf.MARKERSIZE,
                      lw=0, alpha=ALPHA)
 
 left_main_ax.set_xlabel('In-degree')
@@ -79,7 +79,7 @@ left_main_ax.text(150, 150, 'a', fontsize=cf.FONTSIZE + 2, fontweight='bold')
 
 # Top marginal (in-degree)
 top_margin_ax.hist(indeg, bins=cf.OUTDEGREE_BINS, histtype='stepfilled',
-                   color=color_scheme.ATLAS, normed=True, stacked=True)
+                   color=config.COLORS['brain'], normed=True, stacked=True)
 
 # This is for the log-axis for in-degree
 indeg_hist = np.histogram(indeg, bins=cf.OUTDEGREE_BINS)
@@ -99,7 +99,7 @@ top_margin_ax.set_ylim([0, 1.0])
 
 # Right marginal (out-degree)
 right_margin_ax.hist(outdeg, bins=cf.OUTDEGREE_BINS, histtype='stepfilled',
-                     color=color_scheme.ATLAS, orientation='horizontal',
+                     color=config.COLORS['brain'], orientation='horizontal',
                      normed=True, stacked=True)
 
 # This is for the log-axis for out-degree
@@ -125,7 +125,7 @@ right_margin_ax.set_xlim([0, 0.1])
 
 # Right main plot (proportion in vs total degree)
 right_main_ax.scatter(deg, percent_indeg, s=cf.MARKERSIZE, lw=0,
-                      c=color_scheme.ATLAS, alpha=ALPHA)
+                      c=config.COLORS['brain'], alpha=ALPHA)
 
 right_main_ax.set_xlabel('Total degree (in + out)')
 right_main_ax.set_ylabel('Proportion in-degree')

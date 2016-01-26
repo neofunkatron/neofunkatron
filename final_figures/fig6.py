@@ -19,7 +19,7 @@ from metrics import binary_directed as metrics_bd
 from network_plot import change_settings
 
 import brain_constants as bc
-import color_scheme
+from config import COLORS
 
 plt.ion()
 
@@ -40,10 +40,7 @@ Y_LIM_EFFICIENCY = (0, 130)
 ALPHA_DEG_VS_CC = 0.7
 N_GRAPH_SAMPLES = 100
 DEGREE_VS_CLUSTERING_GRAPH_IDX = 0
-COLORS = {'rand': color_scheme.CONFIG,
-          'sg': color_scheme.SRCGROWTH,
-          'geom': color_scheme.GEOMDIRECTED,
-          'brain': color_scheme.ATLAS}
+
 LW = 3
 SCATTER_SIZE = 15
 LABELS = ['Random', 'PA', 'SGPA']
@@ -51,7 +48,8 @@ BAR_LABELS = ['Rand. ', 'PA ', 'SGPA ']
 ERROR_KW = {'ecolor': 'k', 'elinewidth': 2, 'markeredgewidth': 2, 'capsize': 6}
 
 BINS_NODAL_EFFICIENCY = np.linspace(0, 1, 25)
-BINCS_NODAL_EFFICIENCY = 0.5 * (BINS_NODAL_EFFICIENCY[:-1] + BINS_NODAL_EFFICIENCY[1:])
+BINCS_NODAL_EFFICIENCY = 0.5 * (BINS_NODAL_EFFICIENCY[:-1] +
+                                BINS_NODAL_EFFICIENCY[1:])
 
 SAVE_FILE_NAME = 'model_graphs_with_efficiency.npy'
 PLOT_FILE_NAME = 'model_graphs_with_efficiency_plot.npy'
@@ -197,7 +195,8 @@ for a_ctr, ax in enumerate(axs):
     # other graphs
     if a_ctr == 0:
         # degree vs. clustering example graph
-        Gs = [graphss[key][DEGREE_VS_CLUSTERING_GRAPH_IDX] for key in PLOT_KEYS]
+        Gs = [graphss[key][DEGREE_VS_CLUSTERING_GRAPH_IDX]
+              for key in PLOT_KEYS]
 
         for key, G in zip(PLOT_KEYS, Gs):
             cc = nx.clustering(G.to_undirected()).values()

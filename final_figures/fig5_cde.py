@@ -16,7 +16,7 @@ from random_graph.binary_directed import (source_growth, target_attraction,
 from network_plot.change_settings import set_all_text_fontsizes as set_fontsize
 
 import brain_constants as bc
-import color_scheme as cs
+from config import COLORS
 
 LS = np.linspace(0, 2, 21)
 BRAIN_SIZE = [7., 7., 7.]
@@ -217,19 +217,19 @@ axs[2].set_title('Varying L')
 axs[2].set_xlabel('L (mm)')
 axs[2].set_ylabel('Reciprocity coefficient')
 
-axs[2].plot(rs['LS'][1:], sg_mean, color=cs.SRCGROWTH, lw=2)
-axs[2].plot(rs['LS'][1:], ta_mean, color=cs.TARGETATTRACTION, lw=2)
-axs[2].plot(rs['LS'][1:], rand_mean, color=cs.CONFIG, lw=2)
-axs[2].axhline(brain_recip, color=cs.ATLAS, ls='--', lw=2)
+axs[2].plot(rs['LS'][1:], sg_mean, color=COLORS['sgpa'], lw=2)
+axs[2].plot(rs['LS'][1:], ta_mean, color=COLORS['tapa'], lw=2)
+axs[2].plot(rs['LS'][1:], rand_mean, color=COLORS['random'], lw=2)
+axs[2].axhline(brain_recip, color=COLORS['brain'], ls='--', lw=2)
 
 axs[2].legend(['SGPA', 'TAPA', 'Random', 'Connectome'], fontsize=FONT_SIZE)
 
 axs[2].fill_between(rs['LS'][1:], sg_mean - sg_std, sg_mean + sg_std,
-                    color=cs.SRCGROWTH, alpha=ALPHA)
+                    color=COLORS['sgpa'], alpha=ALPHA)
 axs[2].fill_between(rs['LS'][1:], ta_mean - ta_std, ta_mean + ta_std,
-                    color=cs.TARGETATTRACTION, alpha=ALPHA)
+                    color=COLORS['tapa'], alpha=ALPHA)
 axs[2].fill_between(rs['LS'][1:], rand_mean - rand_std, rand_mean + rand_std,
-                    color=cs.RANDOM, alpha=ALPHA)
+                    color=COLORS['random'], alpha=ALPHA)
 
 axs[2].set_xlim(0, 2)
 axs[2].set_ylim(0, .7)

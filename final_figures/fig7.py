@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 import pickle
 
 import config as cf
+from config import COLORS
 
 load_dir = os.environ['DBW_SAVE_CACHE']
 #################
@@ -44,9 +45,8 @@ mpl.rcParams['ps.fonttype'] = 42
 mpl.rcParams['pdf.fonttype'] = 42
 plt.ion()
 
-col_d = cf.COLORS
-graph_col = [col_d['brain'], col_d['configuration'], col_d['small-world'],
-             col_d['scale-free'], col_d['pgpa']]
+graph_col = [COLORS['brain'], COLORS['random'], COLORS['small-world'],
+             COLORS['scale-free'], COLORS['pgpa']]
 
 LW = 2.5
 FONTSIZE = 13

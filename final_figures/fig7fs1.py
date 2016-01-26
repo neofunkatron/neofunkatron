@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 import pickle
 
 import config as cf
+from config import COLORS
 from extract import brain_graph
 from metrics import percolation as perc
 from metrics import binary_undirected as und_metrics
@@ -91,9 +92,8 @@ mpl.rcParams['ps.fonttype'] = 42
 mpl.rcParams['pdf.fonttype'] = 42
 plt.ion()
 
-col_d = cf.COLORS
-graph_col = [col_d['brain'], col_d['configuration'], col_d['small-world'],
-             col_d['scale-free'], col_d['pgpa']]
+graph_col = [COLORS['brain'], COLORS['random'], COLORS['small-world'],
+             COLORS['scale-free'], COLORS['pgpa']]
 MS = 20
 FONTSIZE = 13
 FIGSIZE = (7.5, 3.75)
