@@ -10,6 +10,7 @@ COLORS = {'brain': np.array([170, 68, 153]) / 255,   # violet
           'scale-free': np.array([51, 34, 136]) / 255,      # dark blue
           'sgpa': np.array([136, 204, 238]) / 255,          # cyan
           'sg': np.array([136, 204, 238]) / 255,            # cyan
+          'ta': np.array([136, 34, 85]) / 255,              # pinkish red
           'tapa': np.array([136, 34, 85]) / 255,            # pinkish red
           'pa': np.array([0, 0, 0]) / 255,                  # black
           'geom': np.array([0, 0, 0]) / 255}                # black
