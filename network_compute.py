@@ -21,8 +21,9 @@ def reciprocity(W_net):
     recip_cxns = (W_binary * W_binary.T).sum()
     arecip_cxns = total_cxns - recip_cxns
 
+
 #    import pdb; pdb.set_trace()
-    recip_coeff = recip_cxns / (recip_cxns + 2. * arecip_cxns)
+    recip_coeff = recip_cxns / (np.sum(W_net)*2.)
     return recip_coeff
 
 
