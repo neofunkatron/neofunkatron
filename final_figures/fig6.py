@@ -53,9 +53,6 @@ BINCS_NODAL_EFFICIENCY = 0.5 * (BINS_NODAL_EFFICIENCY[:-1] +
 
 SAVE_FILE_NAME = 'model_graphs_with_efficiency.npy'
 PLOT_FILE_NAME = 'model_graphs_with_efficiency_plot.npy'
-save_fig = True
-if save_fig:
-    SAVE_DIR = os.environ['DBW_SAVE_CACHE']
 
 # load connectome graph
 G_brain, _, _ = brain_graph.binary_directed()
@@ -281,6 +278,6 @@ print(zip(PLOT_KEYS + ['brain'], gamma_stds))
 print('median R^2s')
 print(zip(PLOT_KEYS + ['brain'], gamma_median_r_squareds))
 
-if save_fig:
-    fig.savefig('fig6_ab.pdf', dpi=300)
-    fig.savefig('fig6_ab.png', dpi=300)
+
+fig.savefig('fig6_ab.pdf', dpi=300)
+fig.savefig('fig6_ab.png', dpi=300)
