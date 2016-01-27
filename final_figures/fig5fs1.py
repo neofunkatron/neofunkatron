@@ -8,8 +8,8 @@ import os
 from network_plot.change_settings import set_all_text_fontsizes, set_all_colors
 
 import brain_constants as bc
+from config import COLORS
 
-import color_scheme
 import in_out_plot_config as cf
 
 # Initialize the figure and axes objects
@@ -17,8 +17,6 @@ MARKERSIZE = 25.
 FONTSIZE = 12.
 cf.FONTSIZE = FONTSIZE
 ALPHA = 0.5
-save = True
-save_path = os.getenv('DBW_SAVE_CACHE')
 
 fig = plt.figure(figsize=(7.5, 4), facecolor='w', dpi=300.)
 plt.subplots_adjust(bottom=0.15,hspace=0.45,wspace=0.55)
@@ -58,8 +56,9 @@ a1 = 1.0
 color_scheme.RANDOM = [0.9,0.1,0.0]
 
 # Left main plot (in vs out degree)
-left_main_ax.scatter(indeg,outdeg,c=color_scheme.RANDOM,\
-                     s=cf.MARKERSIZE,lw=0,alpha=ALPHA)
+left_main_ax.scatter(
+    indeg, outdeg, c=COLORS['random'], s=cf.MARKERSIZE, lw=0, alpha=ALPHA
+)
 
 left_main_ax.set_xlabel('In-degree')
 left_main_ax.set_ylabel('Out-degree')
@@ -70,12 +69,12 @@ left_main_ax.set_aspect('auto')
 left_main_ax.set_xticks(np.arange(0, 101, 25))
 left_main_ax.set_yticks(np.arange(0, 101, 25))
 left_main_ax.legend(loc='best')
-left_main_ax.text(120,120,'a',fontsize=cf.FONTSIZE+2,fontweight='bold')
+left_main_ax.text(120, 120, 'a', fontsize=cf.FONTSIZE+2, fontweight='bold')
 
 
 # Top marginal (in-degree)
 top_margin_ax.hist(indeg,bins=cf.OUTDEGREE_BINS,histtype='stepfilled',\
-                     color=color_scheme.RANDOM,normed=True,stacked=True)
+                     color=COLORS['random'],normed=True,stacked=True)
 #top_margin_ax.plot(indeg_x,indeg_y,linestyle='-',lw=4,color='k')
 
 # This is for the log-axis
@@ -95,7 +94,7 @@ top_margin_ax.set_ylim([0,1.0])
 
 # Right marginal (out-degree)
 right_margin_ax.hist(outdeg,bins=cf.OUTDEGREE_BINS,histtype='stepfilled',\
-                     color=color_scheme.RANDOM,orientation='horizontal',normed=True,stacked=True)
+                     color=COLORS['random'],orientation='horizontal',normed=True,stacked=True)
 
 # This is for the log-axis
 outdeg_hist = np.histogram(outdeg,bins=cf.OUTDEGREE_BINS)
@@ -119,8 +118,10 @@ right_margin_ax.set_xlim([0,0.1])
 
 
 # Right main plot (proportion in vs total degree)
-right_main_ax.scatter(deg, percent_indeg, s=cf.MARKERSIZE, lw=0,
-            c=color_scheme.RANDOM,alpha=ALPHA)
+right_main_ax.scatter(
+    deg, percent_indeg, s=cf.MARKERSIZE, lw=0,
+    c=color_scheme.RANDOM, alpha=ALPHA
+)
 
 right_main_ax.set_xlabel('Total degree (in + out)')
 right_main_ax.set_ylabel('Proportion in-degree')
@@ -139,7 +140,6 @@ right_margin_ax.set_xlabel('$P(K_\mathrm{out}=k)$',va='top')
 for temp_ax in [left_main_ax, right_main_ax, top_margin_ax, right_margin_ax,top_dummy_ax,right_dummy_ax]:
     set_all_text_fontsizes(temp_ax, cf.FONTSIZE)
     set_all_colors(temp_ax, cf.LABELCOLOR)
-    #temp_ax.patch.set_facecolor(FACECOLOR)  # Set color of plot area
     temp_ax.tick_params(width=cf.TICKSIZE)
 
 
@@ -170,7 +170,5 @@ for tick in right_log_ticks+right_lin_ticks:
 
 fig.subplots_adjust(left=0.125, top=0.925, right=0.95, bottom=0.225)
 
-if save:
-    fig.savefig(os.path.join(save_path, 'figure_S1.png'), dpi=300)
-    fig.savefig(os.path.join(save_path, 'figure_S1.pdf'), dpi=300)
-plt.show(block=False)
+fig.savefig('fig5fs1.png', dpi=300)
+fig.savefig('fig5fs1.pdf', dpi=300)
