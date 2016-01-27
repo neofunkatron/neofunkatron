@@ -220,6 +220,12 @@ for a_ctr, ax in enumerate(axs):
             )
             lines_temp.append(line)
 
+            print('{}: nodal eff. peak at = {}, {}'.format(
+                key,
+                BINCS_NODAL_EFFICIENCY[counts_nodal_efficiency_mean[key].argmax()],
+                counts_nodal_efficiency_mean[key].max())
+            )
+
         ax.set_xlim(X_LIM_EFFICIENCY)
         ax.set_ylim(Y_LIM_EFFICIENCY)
 
@@ -253,7 +259,7 @@ ax_inset.bar([-bar_width/2 + len(PLOT_KEYS)], power_law_fits['brain'], width=bar
 ax_inset.set_xticks(np.arange(len(PLOT_KEYS) + 1))
 ax_inset.set_xticklabels(BAR_LABELS + ['Connectome'], rotation='vertical')
 
-ax_inset.set_yticks([0, -0.2, -0.4, -0.6])
+ax_inset.set_yticks([0, -0.2, -0.4, -0.6, -.8, -1.])
 ax_inset.set_ylabel(r'$\gamma$')
 
 change_settings.set_all_colors(ax_inset, AX_COLOR)
