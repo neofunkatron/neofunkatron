@@ -11,7 +11,7 @@ from network_plot.change_settings import set_all_text_fontsizes, set_all_colors
 
 import brain_constants as bc
 
-import color_scheme
+import config
 import in_out_plot_config as cf
 
 
@@ -72,9 +72,9 @@ for gamma, labels in zip(GAMMAS, LABELSS):
 
     # Left main plot (in vs out degree)
     left_main_ax.scatter(indeg_brain, outdeg_brain,
-                         c=color_scheme.ATLAS,
+                         c=config.COLORS['brain'],
                          s=MARKERSIZE, lw=0, alpha=ALPHA)
-    left_main_ax.scatter(indeg_sg_total, outdeg_sg_total, c=color_scheme.SRCGROWTH,
+    left_main_ax.scatter(indeg_sg_total, outdeg_sg_total, c=config.COLORS['sg'],
                          s=MARKERSIZE, lw=0, alpha=ALPHA, zorder=3)
 
     left_main_ax.set_xlabel('In-degree')
@@ -89,20 +89,20 @@ for gamma, labels in zip(GAMMAS, LABELSS):
 
     # Top marginal (in-degree)
     top_margin_ax.hist(indeg_brain, bins=cf.OUTDEGREE_BINS,
-                       histtype='stepfilled', color=color_scheme.ATLAS,
+                       histtype='stepfilled', color=config.COLORS['brain'],
                        alpha=ALPHA, label='Brain', normed=True,
                        stacked=True)
     top_margin_ax.hist(indeg_sg_total, bins=cf.OUTDEGREE_BINS, histtype='stepfilled',
-                       color=color_scheme.SRCGROWTH, alpha=ALPHA,
+                       color=config.COLORS['sg'], alpha=ALPHA,
                        label='SG total', normed=True, stacked=True)
 
     # Right marginal (out-degree)
     right_margin_ax.hist(outdeg_brain, bins=cf.OUTDEGREE_BINS,
                          histtype='stepfilled',
-                         color=color_scheme.ATLAS, alpha=ALPHA,
+                         color=config.COLORS['brain'], alpha=ALPHA,
                          orientation='horizontal', normed=True, stacked=True)
     right_margin_ax.hist(outdeg_sg_total, bins=cf.OUTDEGREE_BINS,
-                         histtype='stepfilled', color=color_scheme.SRCGROWTH,
+                         histtype='stepfilled', color=config.COLORS['sg'],
                          alpha=ALPHA, orientation='horizontal', normed=True,
                          stacked=True)
     for tick in right_margin_ax.get_xticklabels():
@@ -121,10 +121,10 @@ for gamma, labels in zip(GAMMAS, LABELSS):
 
     # Right main plot (proportion in vs total degree)
     right_main_ax.scatter(deg_brain, percent_indeg_brain,
-                          s=MARKERSIZE, lw=0, c=color_scheme.ATLAS,
+                          s=MARKERSIZE, lw=0, c=config.COLORS['brain'],
                           alpha=ALPHA, label='Connectome')
     right_main_ax.scatter(deg_sg_total, percent_indeg_sg_total, s=MARKERSIZE, lw=0,
-                          c=color_scheme.SRCGROWTH, alpha=ALPHA,
+                          c=config.COLORS['sg'], alpha=ALPHA,
                           label='SGPA(total, gamma = {})'.format(gamma), zorder=3)
 
     right_main_ax.xaxis.set_major_locator(plt.MaxNLocator(4))
@@ -146,10 +146,12 @@ for gamma, labels in zip(GAMMAS, LABELSS):
     fig.subplots_adjust(left=0.125, top=0.925, right=0.95, bottom=0.225)
 
     fig.savefig('fig5sf4{}{}.pdf'.format(*labels), dpi=300)
+    fig.savefig('fig5sf4{}{}.png'.format(*labels), dpi=300)
+
 
     plt.show(block=False)
 
 
-    r, p = stats.pearsonr(indeg_sg_total, outdeg_sg_total)
+    r, p = stats.spearmanr(indeg_sg_total, outdeg_sg_total)
     print('r = {}'.format(r))
     print('p = {}'.format(p))

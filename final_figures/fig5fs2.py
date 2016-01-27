@@ -7,12 +7,12 @@ from network_plot.change_settings import set_all_text_fontsizes, set_all_colors
 
 import brain_constants as bc
 
-import color_scheme
+import config
 import in_out_plot_config as cf
 
 
 MARKERSIZE = 25.
-FONTSIZE = 12.
+FONTSIZE = 13.
 ALPHA = 0.5
 
 L = np.inf
@@ -67,10 +67,10 @@ right_margin_ax = plt.subplot2grid(cf.subplot_divisions,
                                    sharey=left_main_ax)
 
 # Left main plot (in vs out degree)
-left_main_ax.scatter(indeg_growth, outdeg_growth, c=color_scheme.SRCGROWTH,
+left_main_ax.scatter(indeg_growth, outdeg_growth, c=config.COLORS['sg'],
                      s=MARKERSIZE, lw=0, alpha=ALPHA, zorder=3)
 left_main_ax.scatter(indeg_attachment, outdeg_attachment,
-                     c=color_scheme.TARGETATTRACTION,
+                     c=config.COLORS['ta'],
                      s=MARKERSIZE, lw=0, alpha=ALPHA)
 left_main_ax.set_xlabel('In-degree')
 left_main_ax.set_ylabel('Out-degree')
@@ -84,20 +84,20 @@ left_main_ax.text(150, 150, 'a', fontsize=FONTSIZE + 2, fontweight='bold')
 
 # Top marginal (in-degree)
 top_margin_ax.hist(indeg_attachment, bins=cf.OUTDEGREE_BINS,
-                   histtype='stepfilled', color=color_scheme.TARGETATTRACTION,
+                   histtype='stepfilled', color=config.COLORS['ta'],
                    alpha=ALPHA, label='Target attraction', normed=True,
                    stacked=True)
 top_margin_ax.hist(indeg_growth, bins=cf.OUTDEGREE_BINS, histtype='stepfilled',
-                   color=color_scheme.SRCGROWTH, alpha=ALPHA,
+                   color=config.COLORS['sg'], alpha=ALPHA,
                    label='Source growth', normed=True, stacked=True)
 
 # Right marginal (out-degree)
 right_margin_ax.hist(outdeg_attachment, bins=cf.OUTDEGREE_BINS,
                      histtype='stepfilled',
-                     color=color_scheme.TARGETATTRACTION, alpha=ALPHA,
+                     color=config.COLORS['ta'], alpha=ALPHA,
                      orientation='horizontal', normed=True, stacked=True)
 right_margin_ax.hist(outdeg_growth, bins=cf.OUTDEGREE_BINS,
-                     histtype='stepfilled', color=color_scheme.SRCGROWTH,
+                     histtype='stepfilled', color=config.COLORS['sg'],
                      alpha=ALPHA, orientation='horizontal', normed=True,
                      stacked=True)
 for tick in right_margin_ax.get_xticklabels():
@@ -111,15 +111,15 @@ top_margin_ax.set_ylim([0, 0.1])
 right_margin_ax.set_xticks([0, 0.05, 0.1])
 right_margin_ax.set_xlim([0, 0.1025])
 
-top_margin_ax.set_ylabel('$P(k_\mathrm{in})$', va='baseline')
-right_margin_ax.set_xlabel('$P(k_\mathrm{out})$', va='top')
+top_margin_ax.set_ylabel('$P(K_\mathrm{in}=k)$', va='baseline')
+right_margin_ax.set_xlabel('$P(K_\mathrm{out}=k)$', va='top')
 
 # Right main plot (proportion in vs total degree)
 right_main_ax.scatter(deg_growth, percent_indeg_growth, s=MARKERSIZE, lw=0,
-                      c=color_scheme.SRCGROWTH, alpha=ALPHA,
+                      c=config.COLORS['sg'], alpha=ALPHA,
                       label='SG only', zorder=3)
 right_main_ax.scatter(deg_attachment, percent_indeg_attachment,
-                      s=MARKERSIZE, lw=0, c=color_scheme.TARGETATTRACTION,
+                      s=MARKERSIZE, lw=0, c=config.COLORS['ta'],
                       alpha=ALPHA, label='TA only')
 right_main_ax.xaxis.set_major_locator(plt.MaxNLocator(4))
 right_main_ax.set_yticks(np.arange(0, 1.1, .25))
@@ -134,11 +134,12 @@ right_main_ax.legend(loc=(-0.35, 1.12), prop={'size': 12})
 
 for temp_ax in [left_main_ax, right_main_ax, top_margin_ax, right_margin_ax]:
     set_all_text_fontsizes(temp_ax, FONTSIZE)
-    set_all_colors(temp_ax, cf.LABELCOLOR)
+    set_all_colors(temp_ax, 'k')
     temp_ax.tick_params(width=1.)
 
 fig.subplots_adjust(left=0.125, top=0.925, right=0.95, bottom=0.225)
 
 fig.savefig('fig5fs2.pdf', dpi=300)
+fig.savefig('fig5fs2.png', dpi=300)
 
 plt.show(block=False)
