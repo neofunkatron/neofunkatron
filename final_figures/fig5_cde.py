@@ -1,28 +1,38 @@
-from __future__ import print_function, division
-import matplotlib.pyplot as plt
-import metrics.binary_directed as metrics
-import networkx as nx
-import numpy as np
-import os
+"""
+Plot figure 5 subplots cde showing reciprocity for connectome and models
+"""
 
+from __future__ import print_function, division
+import os
+from os import path as op
+import numpy as np
+import matplotlib.pyplot as plt
+
+import metrics.binary_directed as metrics
 from extract import brain_graph
 from extract.auxiliary import load_brain_dist_matrix
-from random_graph.binary_directed import source_growth, target_attraction, random_directed_deg_seq
+from random_graph.binary_directed import (source_growth, target_attraction,
+                                          random_directed_deg_seq)
 from network_plot.change_settings import set_all_text_fontsizes as set_fontsize
 
 import brain_constants as bc
-import color_scheme as cs
+from config import COLORS
 
-TEMP_FILE_NAME = 'reciprocity_temp.npy'
-RECIPROCITY_FILE_NAME = 'reciprocity.npy'
 LS = np.linspace(0, 2, 21)
 BRAIN_SIZE = [7., 7., 7.]
 N_REPEATS = 100
-ALPHA = .3
+ALPHA = 0.3
 FONT_SIZE = 20
 D_BINS = np.linspace(0, 12, 30)
 L = 0.725
 
+save_fig = True
+if save_fig:
+    SAVE_DIR = os.environ['DBW_SAVE_CACHE']
+    TEMP_FILE_NAME = op.join(SAVE_DIR, 'reciprocity_temp.npy')
+    RECIPROCITY_FILE_NAME = op.join(SAVE_DIR, 'reciprocity.npy')
+
+###############################################
 if not os.path.isfile(TEMP_FILE_NAME):
     # load brain graph
     print('Loading brain graph...')
@@ -32,32 +42,24 @@ if not os.path.isfile(TEMP_FILE_NAME):
     # load distance matrix
     d_brain = load_brain_dist_matrix(labels, in_mm=True)
 
-    # make two SG graphs and two TA graphs (each one with either L=0.75 and L=0)
+    # make two SG graphs and two TA graphs (each one with either L=0.725 or 0)
     print('Making example models...')
     g_sg_l_inf, a_sg_l_inf, d_sg_l_inf = source_growth(
-        N=bc.num_brain_nodes,
-        N_edges=bc.num_brain_edges_directed,
-        L=np.inf, gamma=1, brain_size=BRAIN_SIZE,
-    )
+        N=bc.num_brain_nodes, N_edges=bc.num_brain_edges_directed, L=np.inf,
+        gamma=1, brain_size=BRAIN_SIZE)
     g_sg_l_0725, a_sg_l_0725, d_sg_l_0725 = source_growth(
-        N=bc.num_brain_nodes,
-        N_edges=bc.num_brain_edges_directed,
-        L=L, gamma=1, brain_size=BRAIN_SIZE,
-    )
+        N=bc.num_brain_nodes, N_edges=bc.num_brain_edges_directed, L=L,
+        gamma=1, brain_size=BRAIN_SIZE)
     g_ta_l_inf, a_ta_l_inf, d_ta_l_inf = target_attraction(
-        N=bc.num_brain_nodes,
-        N_edges=bc.num_brain_edges_directed,
-        L=np.inf, gamma=1, brain_size=BRAIN_SIZE,
-    )
+        N=bc.num_brain_nodes, N_edges=bc.num_brain_edges_directed, L=np.inf,
+        gamma=1, brain_size=BRAIN_SIZE)
     g_ta_l_0725, a_ta_l_0725, d_ta_l_0725 = target_attraction(
-        N=bc.num_brain_nodes,
-        N_edges=bc.num_brain_edges_directed,
-        L=L, gamma=1, brain_size=BRAIN_SIZE,
-    )
+        N=bc.num_brain_nodes, N_edges=bc.num_brain_edges_directed, L=L,
+        gamma=1, brain_size=BRAIN_SIZE)
 
-    # make graphs and calculate and save reciprocities if this haven't been done already
+    # make graphs and calculate and save reciprocities if not done yet
     if not os.path.isfile(RECIPROCITY_FILE_NAME):
-        print('Looping through construction of models for reciprocity calculation...')
+        print('Looping through construction of models for reciprocity...')
         algos = {'sg': source_growth, 'ta': target_attraction}
 
         rs = {'LS': LS}
@@ -70,18 +72,16 @@ if not os.path.isfile(TEMP_FILE_NAME):
                 print(l)
                 for repeat in range(N_REPEATS):
                     print(repeat)
-                    g, _, _ = algo(
-                        bc.num_brain_nodes, bc.num_brain_edges_directed, L=l, gamma=1, brain_size=BRAIN_SIZE
-                    )
+                    g = algo(bc.num_brain_nodes, bc.num_brain_edges_directed,
+                             L=l, gamma=1, brain_size=BRAIN_SIZE)[0]
                     rs[key][l_ctr, repeat] = metrics.reciprocity(g)
 
             rs['rand'] = np.nan * np.zeros((N_REPEATS,), dtype=float)
 
             for repeat in range(N_REPEATS):
-                g_rand, _, _ = random_directed_deg_seq(
-                    in_sequence=brain_in_deg, out_sequence=brain_out_deg,
-                    simplify=True,
-                )
+                g_rand = random_directed_deg_seq(in_sequence=brain_in_deg,
+                                                 out_sequence=brain_out_deg,
+                                                 simplify=True)[0]
                 rs['rand'][repeat] = metrics.reciprocity(g_rand)
 
         np.save(RECIPROCITY_FILE_NAME, np.array([rs]))
@@ -92,16 +92,21 @@ if not os.path.isfile(TEMP_FILE_NAME):
     print('Crunching numbers...')
 
     # get reciprocal/nonreciprocal distance histograms for real brain
-    r_dists_brain, non_r_dists_brain = metrics.dists_by_reciprocity(a_brain, d_brain)
+    r_dists_brain, non_r_dists_brain = metrics.dists_by_reciprocity(a_brain,
+                                                                    d_brain)
 
     # do the same for each of the four graphs
     r_non_r_keys = ['sg_l_075', 'sg_l_inf']
     r_dists = {}
     non_r_dists = {}
-    r_dists['sg_l_inf'], non_r_dists['sg_l_inf'] = metrics.dists_by_reciprocity(a_sg_l_inf, d_sg_l_inf)
-    r_dists['sg_l_0725'], non_r_dists['sg_l_0725'] = metrics.dists_by_reciprocity(a_sg_l_0725, d_sg_l_0725)
-    r_dists['ta_l_inf'], non_r_dists['ta_l_inf'] = metrics.dists_by_reciprocity(a_ta_l_inf, d_ta_l_inf)
-    r_dists['ta_l_0725'], non_r_dists['ta_l_0725'] = metrics.dists_by_reciprocity(a_ta_l_0725, d_ta_l_0725)
+    r_dists['sg_l_inf'], non_r_dists['sg_l_inf'] = \
+        metrics.dists_by_reciprocity(a_sg_l_inf, d_sg_l_inf)
+    r_dists['sg_l_0725'], non_r_dists['sg_l_0725'] = \
+        metrics.dists_by_reciprocity(a_sg_l_0725, d_sg_l_0725)
+    r_dists['ta_l_inf'], non_r_dists['ta_l_inf'] = \
+        metrics.dists_by_reciprocity(a_ta_l_inf, d_ta_l_inf)
+    r_dists['ta_l_0725'], non_r_dists['ta_l_0725'] = \
+        metrics.dists_by_reciprocity(a_ta_l_0725, d_ta_l_0725)
 
     r_dists_bincs = {}
     r_dists_cts = {}
@@ -111,7 +116,8 @@ if not os.path.isfile(TEMP_FILE_NAME):
     for key in r_dists.keys():
         r_cts, r_bins = np.histogram(r_dists[key], bins=D_BINS, normed=True)
         r_bincs = 0.5 * (r_bins[:-1] + r_bins[1:])
-        non_r_cts, non_r_bins = np.histogram(non_r_dists[key], bins=D_BINS, normed=True)
+        non_r_cts, non_r_bins = np.histogram(non_r_dists[key], bins=D_BINS,
+                                             normed=True)
         non_r_bincs = 0.5 * (non_r_bins[:-1] + non_r_bins[1:])
         r_dists_cts[key] = r_cts
         r_dists_bincs[key] = r_bincs
@@ -123,8 +129,10 @@ if not os.path.isfile(TEMP_FILE_NAME):
     sg_std = rs['sg'].std(axis=-1)[1:]
     ta_mean = rs['ta'].mean(axis=-1)[1:]
     ta_std = rs['ta'].std(axis=-1)[1:]
-    rand_mean = np.ones(rs['LS'].shape, dtype=float)[1:] * rs['rand'].mean(axis=-1)
-    rand_std = np.ones(rs['LS'].shape, dtype=float)[1:] * rs['rand'].std(axis=-1)
+    rand_mean = np.ones(rs['LS'].shape, dtype=float)[1:] * \
+        rs['rand'].mean(axis=-1)
+    rand_std = np.ones(rs['LS'].shape, dtype=float)[1:] * \
+        rs['rand'].std(axis=-1)
 
     brain_recip = metrics.reciprocity(g_brain)
 
@@ -170,17 +178,18 @@ else:
 
 print('Making plots...')
 # make plots
-fig, axs = plt.subplots(
-    1, 3, facecolor='white', edgecolor='white', figsize=(14, 5), tight_layout=True,
-)
+fig, axs = plt.subplots(1, 3, facecolor='white', edgecolor='white',
+                        figsize=(14, 5), tight_layout=True)
 
 # histogram of reciprocal vs nonreciprocal distances
 axs[0].set_title('Connectome')
 axs[0].set_xlabel('Distance (mm)')
 axs[0].set_ylabel('Probability')
 
-axs[0].hist(r_dists_brain.flatten(), bins=D_BINS, lw=0, facecolor='b', normed=True, alpha=0.5)
-axs[0].hist(non_r_dists_brain.flatten(), bins=D_BINS, lw=0, facecolor='k', normed=True, alpha=0.5)
+axs[0].hist(r_dists_brain.flatten(), bins=D_BINS, lw=0, facecolor='b',
+            normed=True, alpha=0.5)
+axs[0].hist(non_r_dists_brain.flatten(), bins=D_BINS, lw=0, facecolor='k',
+            normed=True, alpha=0.5)
 
 axs[0].legend(['Recip.', 'Non-Recip.'], fontsize=FONT_SIZE)
 
@@ -191,9 +200,12 @@ axs[0].set_ylim(0, .7)
 axs[1].set_title('Growth models')
 axs[1].set_xlabel('Distance (mm)')
 
-axs[1].hist(r_dists['sg_l_0725'], bins=D_BINS, lw=0, color='b', normed=True, alpha=0.5)
-axs[1].hist(non_r_dists['sg_l_0725'], bins=D_BINS, lw=0, color='k', normed=True, alpha=0.5)
-axs[1].legend(['SGPA (L={}) \nRecip.'.format(L), 'SGPA (L={}) \nNon-Recip.'.format(L)])
+axs[1].hist(r_dists['sg_l_0725'], bins=D_BINS, lw=0, color='b', normed=True,
+            alpha=0.5)
+axs[1].hist(non_r_dists['sg_l_0725'], bins=D_BINS, lw=0, color='k',
+            normed=True, alpha=0.5)
+axs[1].legend(['SGPA (L={}) \nRecip.'.format(L),
+               'SGPA (L={}) \nNon-Recip.'.format(L)])
 
 axs[1].set_xticks([0, 4, 8, 12])
 axs[1].set_yticklabels([])
@@ -205,16 +217,19 @@ axs[2].set_title('Varying L')
 axs[2].set_xlabel('L (mm)')
 axs[2].set_ylabel('Reciprocity coefficient')
 
-axs[2].plot(rs['LS'][1:], sg_mean, color=cs.SRCGROWTH, lw=2)
-axs[2].plot(rs['LS'][1:], ta_mean, color=cs.TARGETATTRACTION, lw=2)
-axs[2].plot(rs['LS'][1:], rand_mean, color=cs.CONFIG, lw=2)
-axs[2].axhline(brain_recip, color=cs.ATLAS, ls='--', lw=2)
+axs[2].plot(rs['LS'][1:], sg_mean, color=COLORS['sgpa'], lw=2, zorder=10)
+axs[2].plot(rs['LS'][1:], ta_mean, color=COLORS['tapa'], lw=2)
+axs[2].plot(rs['LS'][1:], rand_mean, color=COLORS['random'], lw=2)
+axs[2].axhline(brain_recip, color=COLORS['brain'], ls='--', lw=2)
 
 axs[2].legend(['SGPA', 'TAPA', 'Random', 'Connectome'], fontsize=FONT_SIZE)
 
-axs[2].fill_between(rs['LS'][1:], sg_mean - sg_std, sg_mean + sg_std, color=cs.SRCGROWTH, alpha=ALPHA)
-axs[2].fill_between(rs['LS'][1:], ta_mean - ta_std, ta_mean + ta_std, color=cs.TARGETATTRACTION, alpha=ALPHA)
-axs[2].fill_between(rs['LS'][1:], rand_mean - rand_std, rand_mean + rand_std, color=cs.RANDOM, alpha=ALPHA)
+axs[2].fill_between(rs['LS'][1:], sg_mean - sg_std, sg_mean + sg_std,
+                    color=COLORS['sgpa'], alpha=ALPHA, zorder=10)
+axs[2].fill_between(rs['LS'][1:], ta_mean - ta_std, ta_mean + ta_std,
+                    color=COLORS['tapa'], alpha=ALPHA)
+axs[2].fill_between(rs['LS'][1:], rand_mean - rand_std, rand_mean + rand_std,
+                    color=COLORS['random'], alpha=ALPHA)
 
 axs[2].set_xlim(0, 2)
 axs[2].set_ylim(0, .7)
@@ -226,5 +241,8 @@ axs[2].text(.06, .64, 'e', fontweight='bold', fontsize=FONT_SIZE)
 for ax in axs:
     set_fontsize(ax, FONT_SIZE)
 
-fig.savefig('fig4cde.pdf')
+if save_fig:
+    fig.savefig('fig5_cde.pdf', dpi=300)
+    fig.savefig('fig5_cde.png', dpi=300)
+
 plt.show(block=True)
