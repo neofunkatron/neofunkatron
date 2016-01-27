@@ -217,7 +217,7 @@ axs[2].set_title('Varying L')
 axs[2].set_xlabel('L (mm)')
 axs[2].set_ylabel('Reciprocity coefficient')
 
-axs[2].plot(rs['LS'][1:], sg_mean, color=COLORS['sgpa'], lw=2)
+axs[2].plot(rs['LS'][1:], sg_mean, color=COLORS['sgpa'], lw=2, zorder=10)
 axs[2].plot(rs['LS'][1:], ta_mean, color=COLORS['tapa'], lw=2)
 axs[2].plot(rs['LS'][1:], rand_mean, color=COLORS['random'], lw=2)
 axs[2].axhline(brain_recip, color=COLORS['brain'], ls='--', lw=2)
@@ -225,7 +225,7 @@ axs[2].axhline(brain_recip, color=COLORS['brain'], ls='--', lw=2)
 axs[2].legend(['SGPA', 'TAPA', 'Random', 'Connectome'], fontsize=FONT_SIZE)
 
 axs[2].fill_between(rs['LS'][1:], sg_mean - sg_std, sg_mean + sg_std,
-                    color=COLORS['sgpa'], alpha=ALPHA)
+                    color=COLORS['sgpa'], alpha=ALPHA, zorder=10)
 axs[2].fill_between(rs['LS'][1:], ta_mean - ta_std, ta_mean + ta_std,
                     color=COLORS['tapa'], alpha=ALPHA)
 axs[2].fill_between(rs['LS'][1:], rand_mean - rand_std, rand_mean + rand_std,
