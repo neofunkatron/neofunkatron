@@ -21,7 +21,7 @@ from network_plot.change_settings import set_all_text_fontsizes, set_all_colors
 
 # PLOTTING PARAMETERS
 FACECOLOR = config.FACE_COLOR
-FIGSIZE = (7.5, 2.25)
+FIGSIZE = (8, 2.5)
 FONT_SIZE = 13
 MARKER_SIZE = 3
 # Colors for brain, random-degree controlled, small-world, scale-free graphs

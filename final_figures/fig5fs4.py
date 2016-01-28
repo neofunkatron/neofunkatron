@@ -42,7 +42,7 @@ if __name__ == "__main__":
 
     model_distances = [model_centroids[edge1][edge2] for edge1 in G.nodes() for edge2 in G.nodes() if edge1 != edge2]
 
-    fig,axs = plt.subplots(1,facecolor='white',figsize=(3.5,2.75),dpi=200.)
+    fig,axs = plt.subplots(1,facecolor='white',figsize=(4,2.8))
     fig.subplots_adjust(bottom=0.15,left=0.15)
 
     bins = np.linspace(0,13,51)
@@ -51,7 +51,7 @@ if __name__ == "__main__":
     model_bins = bins[0:-1]+(bins[1]-bins[0])/2
     axs.plot(model_bins,model_distances_binned,'-',c='k',lw=3)
     axs.set_xlim([0,13])
-    
+
     xticks = [0,4,8,12]
     yticks = np.arange(0,0.3,0.05)
     axs.set_ylabel('Probability',fontsize=labelsize)
@@ -62,5 +62,8 @@ if __name__ == "__main__":
     leg=axs.legend(['7mm$^3$ cube','Mouse brain'],prop={'size':legendsize})
     fig.subplots_adjust(bottom=0.2,left=0.2)
     plt.show(block=False)
+
+    fig.savefig('fig5fs4.png', dpi=300)
+    fig.savefig('fig5fs4.pdf', dpi=300)
 
 

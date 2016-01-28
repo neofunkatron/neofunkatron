@@ -25,12 +25,12 @@ if save:
 # Construct figure object and axes
 ###################################
 
-fig = plt.figure(figsize=(7.5, 4), facecolor=config.FACE_COLOR)
+fig = plt.figure(figsize=(8, 4.25), facecolor=config.FACE_COLOR)
 plt.subplots_adjust(hspace=0.45, wspace=0.45)
 
 left_main_ax = plt.subplot2grid(cf.subplot_divisions, cf.left_main_location,
                                 rowspan=cf.left_main_rowspan,
-                                colspan=cf.left_main_colspan)
+                                colspan=cf.left_main_colspan, aspect='equal')
 
 right_main_ax = plt.subplot2grid(cf.subplot_divisions, cf.right_main_location,
                                  rowspan=cf.right_main_rowspan,

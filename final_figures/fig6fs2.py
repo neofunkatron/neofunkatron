@@ -103,4 +103,5 @@ for ax, label in zip(axs, labels):
             transform=ax.transAxes,  ha='center', va='center')
 
 
-fig.savefig('/Users/rkp/Desktop/undirected_degree.png')
+fig.savefig('fig6fs2.png', dpi=300)
+fig.savefig('fig6fs2.pdf', dpi=300)

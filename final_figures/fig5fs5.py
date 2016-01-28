@@ -29,8 +29,8 @@ for gamma, labels in zip(GAMMAS, LABELSS):
     Gbrain, _, _ = brain_graph.binary_directed()
 
     Gsg_total, _, _ = source_growth_total_degree(
-        N=bc.num_brain_nodes, N_edges=bc.num_brain_edges_directed, L=L, gamma=gamma, brain_size=BRAIN_SIZE,
-    )
+        N=bc.num_brain_nodes, N_edges=bc.num_brain_edges_directed, L=L,
+        gamma=gamma, brain_size=BRAIN_SIZE)
 
     # Get in- & out-degree
     indeg_brain = np.array([Gbrain.in_degree()[node] for node in Gbrain])
@@ -48,12 +48,13 @@ for gamma, labels in zip(GAMMAS, LABELSS):
 
 
     # make plots
-    fig = plt.figure(figsize=(9, 4), facecolor='w', dpi=300.)
+    fig = plt.figure(figsize=(8, 4.25), facecolor='w')
     plt.subplots_adjust(hspace=0.45, wspace=0.45)
 
     left_main_ax = plt.subplot2grid(cf.subplot_divisions, cf.left_main_location,
                                     rowspan=cf.left_main_rowspan,
-                                    colspan=cf.left_main_colspan)
+                                    colspan=cf.left_main_colspan,
+                                    aspect='equal')
 
     right_main_ax = plt.subplot2grid(cf.subplot_divisions, cf.right_main_location,
                                      rowspan=cf.right_main_rowspan,

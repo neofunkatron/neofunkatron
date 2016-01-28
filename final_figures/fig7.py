@@ -46,11 +46,11 @@ mpl.rcParams['pdf.fonttype'] = 42
 plt.ion()
 
 graph_col = [COLORS['brain'], COLORS['random'], COLORS['small-world'],
-             COLORS['scale-free'], COLORS['pgpa']]
+             COLORS['scale-free'], COLORS['sgpa']]
 
 LW = 2.5
 FONTSIZE = 13
-FIGSIZE = (7.5, 4)
+FIGSIZE = (8, 4.25)
 
 ###########################################
 # Plot two metrics vs. nodes removed

@@ -11,10 +11,10 @@ import brain_constants as bc
 import in_out_plot_config as cf
 import color_scheme
 
-cf.FIGSIZE=(7.5,3.75)
-cf.FONTSIZE=13
+cf.FIGSIZE = (7.5, 3.75)
+cf.FONTSIZE = 13
 
-Ls = [0.125,0.5,1.5]
+Ls = [0.125, 0.5, 1.5]
 
 fig,axs = plt.subplots(1,2,figsize=cf.FIGSIZE,facecolor='w')
 
@@ -58,13 +58,13 @@ for i,L in enumerate(Ls):
     [slope,intercept,r,_,_] = stats.linregress(deg,cc)
     slopes.append(slope)
     rs.append(r)
-        
+
 
     axs[1].scatter(deg,cc,color=cols[i],marker='o',\
                    s=markersize,alpha=alpha,lw=0)
 
     binned_degs,_ = np.histogram(degs,deg_bins,normed=True)
-    dx = deg_bins[1]-deg_bins[0]    
+    dx = deg_bins[1]-deg_bins[0]
     axs[0].plot(deg_bins[:-1]+dx/2.,binned_degs,lw=2,color=cols[i])
 
     leg.append(mlines.Line2D([],[],color=cols[i],linestyle='-',markersize=13,\

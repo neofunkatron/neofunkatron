@@ -47,12 +47,12 @@ percent_indeg_attachment = indeg_attachment / deg_attachment.astype(float)
 percent_indeg_growth = indeg_growth / deg_growth.astype(float)
 
 # Make plots
-fig = plt.figure(figsize=(7.5, 4), facecolor='w')
+fig = plt.figure(figsize=(8, 4.25), facecolor='w')
 plt.subplots_adjust(hspace=0.45, wspace=0.45)
 
 left_main_ax = plt.subplot2grid(cf.subplot_divisions, cf.left_main_location,
                                 rowspan=cf.left_main_rowspan,
-                                colspan=cf.left_main_colspan)
+                                colspan=cf.left_main_colspan, aspect='equal')
 
 right_main_ax = plt.subplot2grid(cf.subplot_divisions, cf.right_main_location,
                                  rowspan=cf.right_main_rowspan,
@@ -142,7 +142,7 @@ for temp_ax in [left_main_ax, right_main_ax, top_margin_ax, right_margin_ax]:
 fig.subplots_adjust(left=0.125, top=0.925, right=0.95, bottom=0.225)
 
 # Save figure
-fig.savefig('fig4ab.png', dpi=300)
-fig.savefig('fig4ab.pdf', dpi=300)
+fig.savefig('fig5_ab.png', dpi=300)
+fig.savefig('fig5_ab.pdf', dpi=300)
 
 plt.show(block=False)

@@ -44,12 +44,12 @@ percent_indeg_growth = indeg_growth / deg_growth.astype(float)
 
 
 # make plots
-fig = plt.figure(figsize=(9, 4), facecolor='w', dpi=300.)
+fig = plt.figure(figsize=(8, 4.25), facecolor='w')
 plt.subplots_adjust(hspace=0.45, wspace=0.45)
 
 left_main_ax = plt.subplot2grid(cf.subplot_divisions, cf.left_main_location,
                                 rowspan=cf.left_main_rowspan,
-                                colspan=cf.left_main_colspan)
+                                colspan=cf.left_main_colspan, aspect='equal')
 
 right_main_ax = plt.subplot2grid(cf.subplot_divisions, cf.right_main_location,
                                  rowspan=cf.right_main_rowspan,

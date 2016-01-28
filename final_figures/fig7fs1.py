@@ -93,7 +93,7 @@ mpl.rcParams['pdf.fonttype'] = 42
 plt.ion()
 
 graph_col = [COLORS['brain'], COLORS['random'], COLORS['small-world'],
-             COLORS['scale-free'], COLORS['pgpa']]
+             COLORS['scale-free'], COLORS['sgpa']]
 MS = 20
 FONTSIZE = 13
 FIGSIZE = (7.5, 3.75)

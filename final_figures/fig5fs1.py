@@ -18,11 +18,11 @@ FONTSIZE = 12.
 cf.FONTSIZE = FONTSIZE
 ALPHA = 0.5
 
-fig = plt.figure(figsize=(7.5, 4), facecolor='w', dpi=300.)
+fig = plt.figure(figsize=(8, 4.25), facecolor='w')
 plt.subplots_adjust(bottom=0.15,hspace=0.45,wspace=0.55)
 
 left_main_ax = plt.subplot2grid(cf.subplot_divisions,cf.left_main_location,rowspan=cf.left_main_rowspan,\
-                                 colspan=cf.left_main_colspan)
+                                 colspan=cf.left_main_colspan, aspect='equal')
 
 right_main_ax = plt.subplot2grid(cf.subplot_divisions,cf.right_main_location,rowspan=cf.right_main_rowspan,\
                                  colspan=cf.right_main_colspan)
@@ -152,7 +152,7 @@ right_log_ticks = right_dummy_ax.get_xticklabels()
 
 for tick in top_lin_ticks+right_lin_ticks:
     tick.set_color('k')
-    
+
 for tick in top_log_ticks+right_log_ticks:
     tick.set_color('blue')
     tick.set_fontsize(7.5)

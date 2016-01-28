@@ -28,12 +28,12 @@ G = nx.convert_node_labels_to_integers(G)  # remove nodes not in main network
 
 # Initialize the figure and axes objects
 
-fig = plt.figure(figsize=(7.5, 4), facecolor='w')
+fig = plt.figure(figsize=(8, 4.25), facecolor='w')
 plt.subplots_adjust(bottom=0.15, hspace=0.45, wspace=0.55)
 
 left_main_ax = plt.subplot2grid(
     cf.subplot_divisions, cf.left_main_location,
-    rowspan=cf.left_main_rowspan, colspan=cf.left_main_colspan)
+    rowspan=cf.left_main_rowspan, colspan=cf.left_main_colspan, aspect='equal')
 
 right_main_ax = plt.subplot2grid(
     cf.subplot_divisions, cf.right_main_location,
@@ -178,7 +178,7 @@ cbar_ax.imshow(np.vstack((jet_grad, jet_grad)), aspect='auto', cmap=cm.jet)
 fig.savefig(SAVE_FILE_NAME_IN_OUT, dpi=300)
 
 # plot clustering vs degree and nodal efficiency
-fig, axs = plt.subplots(1, 2, figsize=(7.5, 3.5), tight_layout=True,
+fig, axs = plt.subplots(1, 2, figsize=(8, 3.75), tight_layout=True,
                         facecolor='white')
 
 cc_full = nx.clustering(G.to_undirected())
