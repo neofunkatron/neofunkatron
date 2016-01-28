@@ -197,15 +197,15 @@ axs[0].set_xticks([0, 4, 8, 12])
 axs[0].set_xlim(0, 12)
 axs[0].set_ylim(0, .7)
 
-axs[1].set_title('Growth models')
+axs[1].set_title('SGPA (L = {})'.format(L))
 axs[1].set_xlabel('Distance (mm)')
 
 axs[1].hist(r_dists['sg_l_0725'], bins=D_BINS, lw=0, color='b', normed=True,
             alpha=0.5)
 axs[1].hist(non_r_dists['sg_l_0725'], bins=D_BINS, lw=0, color='k',
             normed=True, alpha=0.5)
-axs[1].legend(['SGPA (L={}) \nRecip.'.format(L),
-               'SGPA (L={}) \nNon-Recip.'.format(L)])
+axs[1].legend(['Recip.',
+               'Non-Recip.'])
 
 axs[1].set_xticks([0, 4, 8, 12])
 axs[1].set_yticklabels([])
