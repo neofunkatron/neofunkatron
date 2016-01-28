@@ -11,7 +11,7 @@ import brain_constants as bc
 import in_out_plot_config as cf
 import color_scheme
 
-cf.FIGSIZE = (7.5, 3.75)
+cf.FIGSIZE = (8, 4)
 cf.FONTSIZE = 13
 
 Ls = [0.125, 0.5, 1.5]
@@ -99,6 +99,7 @@ myleg=axs[0].legend(handles=leg,prop={'size':10})
 
 fig.set_tight_layout(True)
 plt.draw()
-fig.savefig('/mnt/hdd/Documents/dbw/Figures/geometric_cc_vs_deg5.png',dpi=300)
+fig.savefig('fig2.png',dpi=300)
+fig.savefig('fig2.pdf',dpi=300)
 
 
