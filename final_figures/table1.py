@@ -39,7 +39,7 @@ def calc_metrics(G, metrics):
 # SET YOUR SAVE DIRECTORY
 save_dir = os.environ['DBW_SAVE_CACHE']
 
-repeats = 1
+repeats = 100
 
 # Set the graphs and metrics you wisht to include
 graph_names = ['Connectome', 'Random', 'Small-world', 'Scale-free',
