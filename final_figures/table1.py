@@ -17,10 +17,10 @@ import pickle
 
 import extract.brain_graph
 from random_graph import binary_undirected
-from random_graph.binary_directed import biophysical_reverse_outdegree as pgpa_dir
+from random_graph.binary_directed import source_growth
 from metrics import binary_undirected as und_metrics
 import brain_constants as bc
-from config.graph_parameters import LENGTH_SCALE
+from config.graph_parameters import LENGTH_SCALE, SW_REWIRE_PROB, BRAIN_SIZE
 reload(und_metrics)
 
 
@@ -43,10 +43,9 @@ repeats = 100
 
 # Set the graphs and metrics you wisht to include
 graph_names = ['Connectome', 'Random', 'Small-world', 'Scale-free',
-               'PGPA']
+               'SGPA']
 metrics = [nx.average_clustering, nx.average_shortest_path_length,
            und_metrics.global_efficiency, und_metrics.local_efficiency]
-brain_size = [7., 7., 7.]
 
 ###############################
 # Create graph/ compute metrics
@@ -74,25 +73,23 @@ for met_i, bm in enumerate(metrics):
 
 print 'Running metric table with %d repeats\n' % repeats
 for rep in np.arange(repeats):
-    # PGPA model
-    if 'PGPA' in graph_names:
-        G_PGPA, _, _ = pgpa_dir(bc.num_brain_nodes,
-                                L=LENGTH_SCALE)
-        met_arr[graph_names.index('PGPA'), rep, :] = \
-            calc_metrics(G_PGPA.to_undirected(), metrics)
+    # SGPA model
+    if 'SGPA' in graph_names:
+        G_SGPA = source_growth(bc.num_brain_nodes, L=LENGTH_SCALE)[0]
+        met_arr[graph_names.index('SGPA'), rep, :] = \
+            calc_metrics(G_SGPA.to_undirected(), metrics)
 
     # Random Configuration model (random with fixed degree sequence)
     if 'Random' in graph_names:
-        G_CM, _, _ = binary_undirected.random_simple_deg_seq(sequence=brain_degree,
-                                                             brain_size=brain_size,
-                                                             tries=100)
+        G_CM = binary_undirected.random_simple_deg_seq(
+            sequence=brain_degree, brain_size=BRAIN_SIZE, tries=100)[0]
         met_arr[graph_names.index('Random'), rep, :] = \
             calc_metrics(G_CM, metrics)
 
     # Small-world (Watts-Strogatz) model with standard reconnection prob
     if 'Small-world' in graph_names:
         G_SW = nx.watts_strogatz_graph(n_nodes, int(round(brain_degree_mean)),
-                                       0.159)
+                                       SW_REWIRE_PROB)
         met_arr[graph_names.index('Small-world'), rep, :] = \
             calc_metrics(G_SW, metrics)
 
