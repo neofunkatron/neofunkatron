@@ -141,5 +141,3 @@ fig.subplots_adjust(left=0.125, top=0.925, right=0.95, bottom=0.225)
 
 fig.savefig('fig5fs2.pdf', dpi=300)
 fig.savefig('fig5fs2.png', dpi=300)
-
-plt.show(block=False)

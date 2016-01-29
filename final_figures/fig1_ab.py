@@ -19,7 +19,7 @@ import extract.brain_graph
 import config
 from config.graph_parameters import SW_REWIRE_PROB
 
-load_dir = os.environ['DBW_SAVE_CACHE']
+
 ###############################################
 # Plotting params
 ###############################################
@@ -157,20 +157,10 @@ axs[1].legend_.remove()
 handles, legends = axs[0].get_legend_handles_labels()
 axs[0].legend(handles[::-1], legends[::-1])
 
-'''
-# Plot on log scale (looking for power-law solutions)
-axs[2].set_xlim([1, 150])
-axs[2].set_ylim([10E-4, 1])
-axs[2].set_xscale('log')
-axs[2].set_yscale('log')
-axs[2].legend_.remove()
-'''
 
 fig.set_tight_layout(True)
 fig.subplots_adjust(top=0.925, bottom=0.17, left=0.12, wspace=0.325)
 
 # Save figures
-fig.savefig(os.path.join(load_dir, 'fig1_ab.png'), dpi=300)
-fig.savefig(os.path.join(load_dir, 'fig1_ab.pdf'), dpi=300)
-
-plt.draw()
+fig.savefig('fig1_ab.png', dpi=300)
+fig.savefig('fig1_ab.pdf', dpi=300)

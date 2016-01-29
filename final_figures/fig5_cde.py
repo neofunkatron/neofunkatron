@@ -26,11 +26,9 @@ FONT_SIZE = 20
 D_BINS = np.linspace(0, 12, 30)
 L = 0.725
 
-save_fig = True
-if save_fig:
-    SAVE_DIR = os.environ['DBW_SAVE_CACHE']
-    TEMP_FILE_NAME = op.join(SAVE_DIR, 'reciprocity_temp.npy')
-    RECIPROCITY_FILE_NAME = op.join(SAVE_DIR, 'reciprocity.npy')
+
+TEMP_FILE_NAME = 'reciprocity_temp.npy'
+RECIPROCITY_FILE_NAME = 'reciprocity.npy'
 
 ###############################################
 if not os.path.isfile(TEMP_FILE_NAME):
@@ -241,8 +239,5 @@ axs[2].text(.06, .64, 'e', fontweight='bold', fontsize=FONT_SIZE)
 for ax in axs:
     set_fontsize(ax, FONT_SIZE)
 
-if save_fig:
-    fig.savefig('fig5_cde.pdf', dpi=300)
-    fig.savefig('fig5_cde.png', dpi=300)
-
-plt.show(block=True)
+fig.savefig('fig5_cde.pdf', dpi=300)
+fig.savefig('fig5_cde.png', dpi=300)

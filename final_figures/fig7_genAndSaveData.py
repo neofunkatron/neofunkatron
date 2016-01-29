@@ -17,7 +17,6 @@ from random_graph import binary_undirected as und_graphs
 
 from config.graph_parameters import LENGTH_SCALE, SW_REWIRE_PROB, BRAIN_SIZE
 
-save_dir = os.environ['DBW_SAVE_CACHE']
 save_files = True
 ##############################################################################
 
@@ -127,8 +126,7 @@ if save_files:
     for gi, G in enumerate(graph_list):
         print '\tSaving: ' + graph_names[gi],
 
-        save_fname = op.join(save_dir, graph_names[gi] +
-                             '_undirected_perc.pkl')
+        save_fname = graph_names[gi] + '_undirected_perc.pkl'
 
         outfile = open(save_fname, 'wb')
         pickle.dump({'graph_name': graph_names[gi],

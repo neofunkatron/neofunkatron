@@ -18,8 +18,10 @@ BRAIN_SIZE = [7., 7., 7.]
 MARKERSIZE = 25
 
 FONT_SIZE = 12
-SAVE_FILE_NAME_IN_OUT = 'node_by_node_in_and_out.pdf'
-SAVE_FILE_NAME_NODAL_EFF = 'node_by_node_cc_deg_nodal_eff.pdf'
+SAVE_FILE_NAME_IN_OUT = 'fig5fs3.pdf'
+SAVE_FILE_NAME_IN_OUT_PNG = 'fig5fs3.png'
+SAVE_FILE_NAME_NODAL_EFF = 'fig6fs3.pdf'
+SAVE_FILE_NAME_NODAL_EFF_PNG = 'fig6fs3.png'
 
 
 # create model
@@ -176,6 +178,7 @@ jet_grad = np.linspace(0, 1, 256)  # Jet gradient for Old->New
 cbar_ax.imshow(np.vstack((jet_grad, jet_grad)), aspect='auto', cmap=cm.jet)
 
 fig.savefig(SAVE_FILE_NAME_IN_OUT, dpi=300)
+fig.savefig(SAVE_FILE_NAME_IN_OUT_PNG, dpi=300)
 
 # plot clustering vs degree and nodal efficiency
 fig, axs = plt.subplots(1, 2, figsize=(8, 3.75), tight_layout=True,
@@ -223,3 +226,4 @@ for ax, label in zip(axs, labels):
             transform=ax.transAxes,  ha='center', va='center')
 
 fig.savefig(SAVE_FILE_NAME_NODAL_EFF, dpi=300)
+fig.savefig(SAVE_FILE_NAME_NODAL_EFF_PNG, dpi=300)

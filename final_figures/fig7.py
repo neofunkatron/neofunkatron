@@ -12,7 +12,6 @@ import pickle
 import config as cf
 from config import COLORS
 
-load_dir = os.environ['DBW_SAVE_CACHE']
 #################
 # Load graph data
 #################
@@ -109,7 +108,5 @@ for ax_i, ax in enumerate(ax_list):
 fig.set_tight_layout(True)
 
 # Save pdf and png
-fig.savefig(op.join(load_dir, 'fig7.png'), dpi=300)
-fig.savefig(op.join(load_dir, 'fig7.pdf'), dpi=300)
-
-plt.show()
+fig.savefig('fig7.png', dpi=300)
+fig.savefig('fig7.pdf', dpi=300)

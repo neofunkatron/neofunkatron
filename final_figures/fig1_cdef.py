@@ -33,9 +33,6 @@ CC_TICKS = [0, .2, .4, .6, .8, 1.0]
 graph_names = ['Connectome', 'Random', 'Small-world', 'Scale-free']
 labels = ['c', 'd', 'e', 'f']  # Upper corner labels for each plot
 
-save_fig = True
-if save_fig:
-    save_dir = os.environ['DBW_SAVE_CACHE']
 
 plt.ion()
 plt.close('all')
@@ -133,8 +130,6 @@ for ax_i, ax in enumerate(axs):
 
 fig.set_tight_layout({'pad': 1.02, 'w_pad': 0.4})
 
-if save_fig:
-    fig.savefig(os.path.join(save_dir, 'fig1_cdef.png'), dpi=300)
-    fig.savefig(os.path.join(save_dir, 'fig1_cdef.pdf'), dpi=300)
+fig.savefig('fig1_cdef.png', dpi=300)
+fig.savefig('fig1_cdef.pdf', dpi=300)
 
-plt.show()

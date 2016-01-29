@@ -23,8 +23,7 @@ from random_graph.binary_undirected import random_simple_deg_seq
 
 from config.graph_parameters import LENGTH_SCALE, SW_REWIRE_PROB, BRAIN_SIZE
 
-save_dir = os.environ['DBW_SAVE_CACHE']
-load_dir = os.environ['DBW_SAVE_CACHE']
+
 ##############################################################################
 
 
@@ -123,7 +122,7 @@ max_edges = 426 * 425 / 2.  # Calculate theoretical max edges, but check later
 graph_metrics_und = []
 for g_name in graph_names:
     # Load undirected graph metrics
-    load_fname = op.join(load_dir, g_name + '_undirected_perc.pkl')
+    load_fname = g_name + '_undirected_perc.pkl'
     open_file = open(load_fname, 'rb')
     graph_metrics_und.append(pickle.load(open_file))
     open_file.close()
@@ -238,5 +237,5 @@ ax_list[1].text(0.08, .92, labels[1], color='k', fontsize=FONTSIZE + 1,
 fig.set_tight_layout(True)
 
 # Save pdf and png versions
-fig.savefig(op.join(save_dir, 'fig7fs1.png'), dpi=300)
-fig.savefig(op.join(save_dir, 'fig7fs1.pdf'), dpi=300)
+fig.savefig('fig7fs1.png', dpi=300)
+fig.savefig('fig7fs1.pdf', dpi=300)

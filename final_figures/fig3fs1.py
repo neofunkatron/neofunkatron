@@ -42,5 +42,3 @@ ax.set_yticklabels(yticks, size=fontsize)
 plt.subplots_adjust(left=0.15, right=0.95, bottom=0.2, top=0.9)
 plt.savefig('fig3fs1.png', dpi=300)
 plt.savefig('fig3fs1.pdf', dpi=300)
-
-plt.show()

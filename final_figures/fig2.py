@@ -98,8 +98,8 @@ for tick in ticks:
 myleg=axs[0].legend(handles=leg,prop={'size':10})
 
 fig.set_tight_layout(True)
-plt.draw()
-fig.savefig('fig2.png',dpi=300)
-fig.savefig('fig2.pdf',dpi=300)
+
+fig.savefig('fig2.png', dpi=300)
+fig.savefig('fig2.pdf', dpi=300)
 
 

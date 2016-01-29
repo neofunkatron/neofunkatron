@@ -17,9 +17,6 @@ cf.MARKERSIZE = 25.
 cf.FONTSIZE = 12.
 ALPHA = 0.5
 
-save = False
-if save:
-    save_path = os.environ['DBW_SAVE_CACHE']
 
 ###################################
 # Construct figure object and axes
@@ -172,8 +169,5 @@ for tick in right_log_ticks + right_lin_ticks:
 
 fig.subplots_adjust(left=0.125, top=0.925, right=0.95, bottom=0.225)
 
-if save:
-    fig.savefig(os.path.join(save_path, 'fig_3.png'), dpi=300)
-    fig.savefig(os.path.join(save_path, 'fig_3.pdf'), dpi=300)
-
-plt.show(block=False)
+fig.savefig('fig_3.png', dpi=300)
+fig.savefig('fig_3.pdf', dpi=300)
