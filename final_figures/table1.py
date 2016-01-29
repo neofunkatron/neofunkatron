@@ -82,7 +82,7 @@ for rep in np.arange(repeats):
     # Random Configuration model (random with fixed degree sequence)
     if 'Random' in graph_names:
         G_CM = binary_undirected.random_simple_deg_seq(
-            sequence=brain_degree, brain_size=BRAIN_SIZE, tries=100)
+            sequence=brain_degree, brain_size=BRAIN_SIZE, tries=100)[0]
         met_arr[graph_names.index('Random'), rep, :] = \
             calc_metrics(G_CM, metrics)
 
