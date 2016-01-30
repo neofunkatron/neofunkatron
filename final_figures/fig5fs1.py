@@ -55,7 +55,7 @@ deg = indeg + outdeg
 percent_indeg = indeg / deg.astype(float)
 
 a1 = 1.0
-color_scheme.RANDOM = [0.9,0.1,0.0]
+
 
 # Left main plot (in vs out degree)
 left_main_ax.scatter(
