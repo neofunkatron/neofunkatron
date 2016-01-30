@@ -15,18 +15,9 @@ from extract import brain_graph
 from network_plot import change_settings
 
 import brain_constants as bc
+from config import COLORS
+from config.graph_parameters import LENGTH_SCALE
 
-LENGTH_SCALE = 0.75
-COLORS = {
-    'brain': np.array([170, 68, 153]) / 255,
-    'er': np.array([204, 102, 119]) / 255,
-    'random': np.array([153, 153, 51]) / 255,
-    'small-world': np.array([17, 119, 51]) / 255,
-    'scale-free': np.array([51, 34, 136]) / 255,
-    'target-attraction': np.array([221, 204, 119]) / 255,
-    'source-growth': np.array([68, 170, 53]) / 255,
-    'sgpa': np.array([136, 204, 238]) / 255,
-}
 FACE_COLOR = 'w'
 AX_COLOR = 'k'
 FONT_SIZE = 20
@@ -35,23 +26,19 @@ FONT_SIZE = 20
 FIG_SIZE = (12, 5)
 BINS = np.linspace(0, 150, 40)
 
-LOAD_FILE_NAME = 'model_graphs_with_efficiency.pickle'
+LOAD_FILE_NAME = 'model_graphs_with_efficiency.npy'
 
 
 # load brain graph
 G_brain, _, _ = brain_graph.binary_directed()
 
 # look for file containing graphs
-data_dir = os.path.join(os.getenv('DBW_DATA_DIRECTORY'), 'graphs')
-save_file_path = os.path.join(data_dir, LOAD_FILE_NAME)
-
 print('Attempting to open file "{}"...'.format(LOAD_FILE_NAME))
 try:
-    with open(save_file_path, 'rb') as f:
-        data = pickle.load(f)
-        graphs = data['graphs_sgpa']
+    with open(LOAD_FILE_NAME, 'rb') as f:
+        graphs = np.load(LOAD_FILE_NAME)[0]['sg']
 except Exception, e:
-    raise IOError('Error loading data from file "{}"'.format(LOAD_FILE_NAME))
+    raise IOError('Error loading data from file "{}" (please run "fig6.py" first'.format(LOAD_FILE_NAME))
 else:
     print('File loaded successfully!')
 
@@ -102,7 +89,6 @@ axs[1].legend([brain_handle[-1][0], sgpa_handle[0]], ['Connectome', 'SGPA'])
 for ax, label in zip(axs, labels):
     ax.text(0.05, 0.95, label, fontsize=20, fontweight='bold',
             transform=ax.transAxes,  ha='center', va='center')
-
 
 fig.savefig('fig6fs2.png', dpi=300)
 fig.savefig('fig6fs2.pdf', dpi=300)
