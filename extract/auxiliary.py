@@ -88,35 +88,3 @@ def load_brain_dist_matrix(labels, in_mm=True):
         dists /= 1000
 
     return dists
-
-"""
-def get_coords():
-    A = scio.loadmat(STRUCTURE_DATA_FILE_NAME)
-    contra_coords = A['cntrltrl_coordnt_dctnry']
-    contra_type = contra_coords.dtype
-    contra_names = contra_type.names
-    contra_dict = {contra_names[k] + '_L': contra_coords[0][0][k][0] for k in range(len(contra_coords[0][0]))}
-
-    ipsi_coords = A['ipsltrl_coordnt_dctnry']
-    ipsi_type = ipsi_coords.dtype
-    ipsi_names = ipsi_type.names
-    ipsi_dict = {ipsi_names[k] + '_R': ipsi_coords[0][0][k][0] for k in range(len(ipsi_coords[0][0]))}
-
-    contra_dict.update(ipsi_dict)
-
-    return contra_dict
-
-
-def load_centroids(labels, in_mm=True):
-    ""Load centroids.""
-    centroids = get_coords()
-
-    centroidsMat = np.zeros([len(labels), 3])
-    for i,node in enumerate(labels):
-        centroidsMat[i, :] = centroids[node]
-
-    if in_mm:
-        centroidsMat /= 10.
-
-    return centroidsMat
-"""
