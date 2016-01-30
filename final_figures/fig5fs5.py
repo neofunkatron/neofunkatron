@@ -149,8 +149,8 @@ for gamma, labels in zip(GAMMAS, LABELSS):
 
     fig.subplots_adjust(left=0.125, top=0.925, right=0.95, bottom=0.225)
 
-    fig.savefig('fig5sf4{}{}.pdf'.format(*labels), dpi=300)
-    fig.savefig('fig5sf4{}{}.png'.format(*labels), dpi=300)
+    fig.savefig('fig5sf5{}{}.pdf'.format(*labels), dpi=300)
+    fig.savefig('fig5sf5{}{}.png'.format(*labels), dpi=300)
 
 
     plt.show(block=False)
