@@ -122,7 +122,7 @@ right_margin_ax.set_xlim([0,0.1])
 # Right main plot (proportion in vs total degree)
 right_main_ax.scatter(
     deg, percent_indeg, s=cf.MARKERSIZE, lw=0,
-    c=color_scheme.RANDOM, alpha=ALPHA
+    c=COLORS['random'], alpha=ALPHA
 )
 
 right_main_ax.set_xlabel('Total degree (in + out)')
