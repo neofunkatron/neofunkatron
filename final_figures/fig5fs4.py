@@ -19,8 +19,7 @@ import aux_random_graphs
 from brain_constants import *
 
 from network_compute import reciprocity
-
-import color_scheme
+import config
 
 labelsize=11
 ticksize=10
@@ -48,7 +47,7 @@ if __name__ == "__main__":
     fig.subplots_adjust(bottom=0.15,left=0.15)
 
     bins = np.linspace(0,13,51)
-    axs.hist(inter_node_distances,bins,facecolor=color_scheme.ATLAS,normed=True)
+    axs.hist(inter_node_distances,bins,facecolor=config.COLORS['brain'],normed=True)
     model_distances_binned,_ = np.histogram(model_distances,bins,normed=True)
     model_bins = bins[0:-1]+(bins[1]-bins[0])/2
     axs.plot(model_bins,model_distances_binned,'-',c='k',lw=3)

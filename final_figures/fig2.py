@@ -12,7 +12,7 @@ from extract.brain_graph import binary_directed
 import brain_constants as bc
 
 import in_out_plot_config as cf
-import color_scheme
+import config
 
 cf.FIGSIZE = (8, 4)
 cf.FONTSIZE = 13
@@ -42,8 +42,8 @@ deg_brain = Gbrain.to_undirected().degree().values()
 
 N = 100
 
-axs[0].hist(deg_brain,deg_bins,facecolor=color_scheme.ATLAS,alpha=0.75,normed=True)
-leg.append(mlines.Line2D([],[],color=color_scheme.ATLAS,linestyle='-',markersize=13,\
+axs[0].hist(deg_brain,deg_bins,facecolor=config.COLORS['brain'], alpha=0.75,normed=True)
+leg.append(mlines.Line2D([],[],color=config.COLORS['brain'], linestyle='-',markersize=13,\
                          label='Connectome',lw=3,alpha=0.75))
 
 for i,L in enumerate(Ls):
