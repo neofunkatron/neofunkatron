@@ -3,6 +3,9 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import scipy.stats as stats
 import matplotlib.lines as mlines
+import os
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 from random_graph.binary_undirected import pure_geometric
 from extract.brain_graph import binary_directed

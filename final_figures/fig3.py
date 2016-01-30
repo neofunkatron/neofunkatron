@@ -4,9 +4,11 @@ Plot fig 3
 Connectome degree distribution (with marginals) and proportion in-degree
 """
 
-import os
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
+import os
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 import config
 import in_out_plot_config as cf

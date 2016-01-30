@@ -2,11 +2,13 @@
 Create and save percolation data for standard, brain, and model graphs.
 """
 
+import networkx as nx
+import numpy as np
 import os
 from os import path as op
-import numpy as np
-import networkx as nx
 import pickle
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 from extract import brain_graph
 from metrics import percolation as perc

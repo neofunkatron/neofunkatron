@@ -1,8 +1,11 @@
 from __future__ import division, print_function
-import os
 import numpy as np
 from scipy import stats
 import matplotlib.pyplot as plt
+import pandas as pd
+import os
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 from extract import brain_graph
 from random_graph.binary_directed import source_growth

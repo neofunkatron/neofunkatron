@@ -11,6 +11,8 @@ import networkx as nx
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import pickle
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 import config as cf
 from config import COLORS

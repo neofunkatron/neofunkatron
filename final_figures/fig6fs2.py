@@ -3,12 +3,13 @@ Calculate the node betweenness and node-averaged inverse shortest path length di
 """
 from __future__ import print_function, division
 
+import matplotlib.pyplot as plt
+import networkx as nx
+import numpy as np
 import os
 import pickle
-import numpy as np
-import networkx as nx
-import matplotlib.pyplot as plt
-plt.ion()
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 from extract import brain_graph
 from network_plot import change_settings

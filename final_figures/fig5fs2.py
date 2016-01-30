@@ -1,6 +1,8 @@
-import os
 import numpy as np
 import matplotlib.pyplot as plt
+import os
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 from random_graph.binary_directed import target_attraction, source_growth
 from network_plot.change_settings import set_all_text_fontsizes, set_all_colors

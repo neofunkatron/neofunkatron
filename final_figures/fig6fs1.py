@@ -6,10 +6,12 @@ averaged over several instantiations).
 """
 from __future__ import print_function, division
 
-import os
 import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
+import os
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 from extract import brain_graph
 from random_graph.binary_directed import source_growth as sg

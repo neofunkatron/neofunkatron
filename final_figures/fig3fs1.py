@@ -2,9 +2,11 @@
 Plot proportion in-degree of mouse connectome
 """
 
-import os
 import numpy as np
 import matplotlib.pyplot as plt
+import os
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 from extract.brain_graph import binary_directed as brain_graph
 from config import COLORS

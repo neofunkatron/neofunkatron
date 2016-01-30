@@ -5,6 +5,8 @@ import graph_tools.auxiliary as aux_tools
 import networkx as nx
 import os
 import pandas as pd
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 from numpy import concatenate as cc
 
