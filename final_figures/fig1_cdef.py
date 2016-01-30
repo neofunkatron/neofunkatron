@@ -8,11 +8,13 @@ Fig 1 cdef, Plot clustering vs. degree for mouse connectome and standard
 random graphs.
 """
 
-import os
-import numpy as np
-import scipy.stats as stats
 import matplotlib.pyplot as plt
 import networkx as nx
+import numpy as np
+import os
+import scipy.stats as stats
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 import config
 from config.graph_parameters import SW_REWIRE_PROB

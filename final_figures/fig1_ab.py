@@ -7,12 +7,14 @@ degree_dists_undirected.py
 Fig 1ab: Plot undirected degree distributions for brain and standard graphs
 """
 
-import os
-import numpy as np
 import matplotlib.pyplot as plt
-import networkx as nx
 from networkx import barabasi_albert_graph as ba
 from networkx import watts_strogatz_graph as ws
+import networkx as nx
+import numpy as np
+import os
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 from network_plot.change_settings import set_all_text_fontsizes
 import extract.brain_graph
