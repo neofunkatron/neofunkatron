@@ -40,7 +40,7 @@ plt.rcParams['ps.fonttype'] = 42
 plt.rcParams['pdf.fonttype'] = 42
 
 n_bins = 50
-repeats = 2  # 100 repeats for manuscript
+repeats = 100  # 100 repeats for manuscript
 
 hist_brain = True  # Plot brain as histogram bars? Otherwise, as line
 ###############################################
