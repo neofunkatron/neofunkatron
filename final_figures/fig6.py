@@ -54,7 +54,6 @@ BINCS_NODAL_EFFICIENCY = 0.5 * (BINS_NODAL_EFFICIENCY[:-1] +
                                 BINS_NODAL_EFFICIENCY[1:])
 
 SAVE_FILE_NAME = 'model_graphs_with_efficiency.npy'
-PLOT_FILE_NAME = 'model_graphs_with_efficiency_plot.npy'
 
 # load connectome graph
 G_brain, _, _ = brain_graph.binary_directed()
@@ -71,6 +70,7 @@ if os.path.isfile(SAVE_FILE_NAME):
         print('File loaded successfully!')
 else:
     print('looping over {} graph instantiations...'.format(N_GRAPH_SAMPLES))
+    print('(this could take a while...)')
 
     graphss = {key: [] for key in KEYS}
 
