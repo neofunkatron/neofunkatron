@@ -10,7 +10,6 @@ Functions for generating random binary undirected graphs not included in
 import numpy as np
 import networkx as nx
 import graph_tools.auxiliary as aux_tools
-import aux_random_graphs
 
 import brain_constants as bc
 
@@ -123,16 +122,7 @@ def source_growth(N=bc.num_brain_nodes, N_edges=bc.num_brain_edges_directed,
         G, A, D: Networkx graph object, adjacency matrix, distance matrix"""
 
     # Pick node positions & calculate distance matrix
-    if brain_size == 'brain':
-        centroids_dict = aux_random_graphs.get_coords()
-        labels = centroids_dict.keys()
-        centroids = np.zeros((N, 3))
-
-        for ctr, label in enumerate(labels):
-            centroids[ctr, :] = centroids_dict[label] / 10.0
-
-    else:
-        centroids = np.random.uniform([0, 0, 0], brain_size, (N, 3))
+    centroids = np.random.uniform([0, 0, 0], brain_size, (N, 3))
 
     # Calculate distance matrix and distance decay matrix
     D = aux_tools.dist_mat(centroids)
