@@ -40,7 +40,7 @@ plt.rcParams['ps.fonttype'] = 42
 plt.rcParams['pdf.fonttype'] = 42
 
 n_bins = 50
-repeats = 100  # 100 repeats for manuscript
+repeats = 2  # 100 repeats for manuscript
 
 hist_brain = True  # Plot brain as histogram bars? Otherwise, as line
 ###############################################
@@ -93,6 +93,7 @@ RAND_deg_mat = -1 * np.ones((repeats, n_nodes))
 WS_deg_mat = -1 * np.ones((repeats, n_nodes))
 BA_deg_mat = -1 * np.ones((repeats, n_nodes))
 
+print 'this could take a while...'
 for r in np.arange(repeats):
     # Erdos-Renyi (pure random)
     # ER_deg_mat[r, :] = er(n_nodes, edge_density).degree().values()
