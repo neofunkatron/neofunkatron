@@ -5,20 +5,18 @@ import graph_tools.auxiliary as aux_tools
 import networkx as nx
 import os
 import pandas as pd
+from sklearn import manifold
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 
 from numpy import concatenate as cc
 
-from extract.brain_graph import binary_directed as brain_graph
+from extract.brain_graph import binary_directed
+import extract.auxiliary as aux
 from random_graph.binary_directed import source_growth as sgpa
 from network_plot.change_settings import set_all_text_fontsizes as set_fontsize
 
-import aux_random_graphs
-
 from brain_constants import *
-
-from network_compute import reciprocity
 import config
 
 labelsize=11
@@ -31,17 +29,25 @@ def dist(x,y):
 
 if __name__ == "__main__":
     # this isn't right... the third return object is a distance matrix
-    G, _, model_centroids = sgpa()
 
 
-    centroidsUncorrected = aux_random_graphs.get_coords()
-    # This is because the coordinates are off by a factor of 10
-    centroids = [centroidsUncorrected[k]/10. for k in centroidsUncorrected]
+    # Get the connectome
+    G,_, labels = binary_directed()
+    nodes = G.nodes()
+    new_labels = {nodes[i]:labels[i] for i in range(len(nodes))}
+    distance_matrix=aux.load_brain_dist_matrix(new_labels)
 
-    inter_node_distances = [dist(edge1,edge2)
+    mds = manifold.MDS(n_components=3, max_iter=1000, eps=1e-10, dissimilarity='precomputed')
+    centroids = mds.fit_transform(distance_matrix)
+
+    inter_node_distances = [dist(edge1, edge2)
                             for edge1 in centroids for edge2 in centroids if not all(edge1 == edge2)]
 
-    model_distances = [model_centroids[edge1][edge2] for edge1 in G.nodes() for edge2 in G.nodes() if edge1 != edge2]
+    G_sgpa, _, model_centroids = sgpa()
+    model_distances = [model_centroids[edge1][edge2]
+                       for edge1 in G_sgpa.nodes()
+                       for edge2 in G_sgpa.nodes()
+                       if edge1 != edge2]
 
     fig,axs = plt.subplots(1,facecolor='white',figsize=(4,2.8))
     fig.subplots_adjust(bottom=0.15,left=0.15)
