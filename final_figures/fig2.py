@@ -17,7 +17,7 @@ import config
 cf.FIGSIZE = (8, 4)
 cf.FONTSIZE = 13
 
-Ls = [0.125, 0.5, 1.5]
+Ls = [0.4, 0.8, 1.6]
 
 fig,axs = plt.subplots(1,2,figsize=cf.FIGSIZE,facecolor='w')
 
@@ -47,8 +47,10 @@ leg.append(mlines.Line2D([],[],color=config.COLORS['brain'], linestyle='-',marke
                          label='Connectome',lw=3,alpha=0.75))
 
 for i,L in enumerate(Ls):
+    print 'L = {}'.format(L)
     degs=[]
     for k in range(N):
+        print 'repeat {}'.format(k)
         G,_,_ = pure_geometric(N=bc.num_brain_nodes,N_edges=bc.num_brain_edges_undirected,
                            L=L)
         G_un = G.to_undirected()
