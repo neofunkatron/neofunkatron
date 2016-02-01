@@ -205,7 +205,7 @@ axs[1].hist(r_dists['sg_l_0725'], bins=D_BINS, lw=0, color='b', normed=True,
 axs[1].hist(non_r_dists['sg_l_0725'], bins=D_BINS, lw=0, color='k',
             normed=True, alpha=0.5)
 axs[1].legend(['Recip.',
-               'Non-Recip.'])
+               'Non-Recip.'], fontsize=FONT_SIZE)
 
 axs[1].set_xticks([0, 4, 8, 12])
 axs[1].set_yticklabels([])

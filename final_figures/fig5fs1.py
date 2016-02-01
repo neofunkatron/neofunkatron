@@ -142,7 +142,7 @@ right_margin_ax.set_xlabel('$P(K_\mathrm{out}=k)$',va='top')
 for temp_ax in [left_main_ax, right_main_ax, top_margin_ax, right_margin_ax,top_dummy_ax,right_dummy_ax]:
     set_all_text_fontsizes(temp_ax, cf.FONTSIZE)
     set_all_colors(temp_ax, cf.LABELCOLOR)
-    temp_ax.tick_params(width=cf.TICKSIZE)
+    #temp_ax.tick_params(width=cf.TICKSIZE)
 
 
 
