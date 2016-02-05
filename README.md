@@ -9,4 +9,4 @@ This project uses the "linear model" and brain region distance matrix used in Oh
 
 If you have any questions, feel free to contact any of the owners of this repository (Henriksen, Pang, Wronkiewicz).
 
-All code is written in Python 2.7.
+All code is written in Python 2.7. The versions of external libraries we used are given in requirements.txt.
