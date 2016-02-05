@@ -1,14 +1,6 @@
-A simple generative model (AKA Neofunkatron) of the mouse mesoscale connectome
+A simple generative model (AKA "the neofunkatron") of the mouse mesoscale connectome
 ===
 
-All code used to generate figures is in the directory final_figures. If you run a script involving the connectivity atlas, the code will check for the .xlsx file containing the connectivity data (see below) and download it if it is not found.
+All code used to generate figures is in the directory final_figures. To run any piece of code, clone this repository, change directory to the repository root, and call python final_figures/figXXXX.py . Figures generated will be saved as pdf and png formats in the directory from which the command was invoked.
 
-## To Do
-* Remove commented out code and other functions that are never called.
-* Clean up all comments.
-* Add test for efficiency between two versions and simplify.
-* Make sure all parameters used to make models that we talk about in figures are in the same place. Right now a lot are defined in the corresponding script, rather than imported from one place, as they should be.
-* Double check that code uses correct algorithms and matches the text given all the changes.
-* Make sure requirements.txt contains all the right dependencies and versions, so that everything would run correctly in a virtualenv.
-
-This project uses the "linear model" and brain region distance matrix used in Oh et al., (2014). Both are available in the supplementary information of http://www.nature.com/nature/journal/v508/n7495/full/nature13186.html.
+This project uses the "linear model" and brain region distance matrix used in Oh et al., (2014). Both are available in the supplementary information of http://www.nature.com/nature/journal/v508/n7495/full/nature13186.html. When the code is run, these files will be downloaded to the current directory the first time they are needed. You must be connected to the internet for this to work.
