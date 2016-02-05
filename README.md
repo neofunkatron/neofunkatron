@@ -8,3 +8,5 @@ All of the code for generating custom random graphs is in the random_graph direc
 This project uses the "linear model" and brain region distance matrix used in Oh et al., (2014). Both are available in the supplementary information of http://www.nature.com/nature/journal/v508/n7495/full/nature13186.html. When the code is run, these files will be downloaded to the current directory the first time they are needed. You must be connected to the internet for this to work.
 
 If you have any questions, feel free to contact any of the owners of this repository (Henriksen, Pang, Wronkiewicz).
+
+All code is written in Python 2.7.
